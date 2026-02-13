@@ -2347,7 +2347,7 @@ function navigateTo(screenId) {
 
 
 // ════════════════════════════════════════════════════════════
-// STORAGE — uses window.storage for persistence
+// STORAGE — uses localStorage for persistence in any browser
 // ════════════════════════════════════════════════════════════
 let savedEntries = [];
 let habitData = {};
@@ -2357,13 +2357,13 @@ let moodData = {};
 
 async function storageGet(key, fallback) {
   try {
-    const result = await window.storage.get(key);
-    return result ? JSON.parse(result.value) : fallback;
+    const val = localStorage.getItem(key);
+    return val ? JSON.parse(val) : fallback;
   } catch(e) { return fallback; }
 }
 
 async function storageSet(key, value) {
-  try { await window.storage.set(key, JSON.stringify(value)); } catch(e) {}
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch(e) {}
 }
 
 async function initStorage() {
