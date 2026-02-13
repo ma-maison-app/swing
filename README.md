@@ -2140,9 +2140,24 @@ function saveWin() {
   
   wins.unshift(win);
   localStorage.setItem('swing_wins', JSON.stringify(wins));
+  
+  // Also add to entries for Past Entries screen
+  const entry = {
+    id: Date.now(),
+    date: new Date().toISOString(),
+    type: 'win',
+    title: 'Win of the Day',
+    preview: text.slice(0, 100),
+    tags: ['win of the day']
+  };
+  
+  savedEntries.unshift(entry);
+  localStorage.setItem('swing_entries', JSON.stringify(savedEntries));
+  
   input.value = '';
   showToast('Win saved! 🌟');
   renderWins();
+  renderEntries();
   updateHomeWin();
 }
 
@@ -2285,6 +2300,7 @@ function saveCompassion() {
   localStorage.setItem('swing_entries', JSON.stringify(savedEntries));
   document.getElementById('compassion-reflection').value = '';
   showToast('Reflection saved ✦');
+  renderEntries();
 }
 
 // ════════════════════════════════════════════════════════════
@@ -2475,6 +2491,7 @@ function saveCBTEntry(type) {
   savedEntries.unshift(entry);
   localStorage.setItem('swing_entries', JSON.stringify(savedEntries));
   showToast('Saved ✦');
+  renderEntries();
 }
 
 // ════════════════════════════════════════════════════════════
@@ -2555,7 +2572,29 @@ function saveHabits() {
     movementMins: document.getElementById('h-movement-mins').value
   };
   localStorage.setItem('swing_habits', JSON.stringify(habitData));
+  
+  // Create a summary for the entry
+  const summary = [];
+  if (habitData[today].sleep) summary.push(`${habitData[today].sleep}h sleep`);
+  if (habitData[today].water) summary.push(`${habitData[today].water} glasses water`);
+  if (habitData[today].nutrition) summary.push(habitData[today].nutrition);
+  if (habitData[today].movement) summary.push(habitData[today].movement);
+  
+  // Add to entries
+  const entry = {
+    id: Date.now(),
+    date: new Date().toISOString(),
+    type: 'habits',
+    title: 'Daily Habits',
+    preview: summary.join(' • '),
+    tags: ['habits', 'self-care']
+  };
+  
+  savedEntries.unshift(entry);
+  localStorage.setItem('swing_entries', JSON.stringify(savedEntries));
+  
   showToast('Habits saved ✦');
+  renderEntries();
 
   // Update home tiles
   if (habitData[today].sleep) document.getElementById('home-sleep').textContent = habitData[today].sleep + 'h';
