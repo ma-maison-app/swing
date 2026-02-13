@@ -31,7 +31,7 @@ body {
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
-  padding-bottom: 80px;
+  padding-bottom: 72px;
 }
 
 /* ── CANVAS STARFIELD ── */
@@ -1201,6 +1201,162 @@ textarea { min-height: 80px; line-height: 1.6; }
   opacity: 1;
 }
 
+/* ── SVG ICON HELPERS ── */
+.svg-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.svg-icon svg { display: block; }
+
+.tile-icon { display: inline-flex; align-items: center; margin-right: 0.4rem; }
+.tile-icon svg { width: 1.4rem; height: 1.4rem; }
+
+.card-icon { display: inline-flex; align-items: center; gap: 0.45rem; }
+.card-icon svg { width: 1.1rem; height: 1.1rem; flex-shrink: 0; }
+
+.mood-dot svg { width: 1.4rem; height: 1.4rem; }
+.mood-dot { display:flex; align-items:center; justify-content:center; }
+
+.win-icon-svg { display:inline-flex; align-items:center; margin-right:0.4rem; }
+.win-icon-svg svg { width:1rem; height:1rem; }
+
+.bubble-drop svg { width:1.2rem; height:1.2rem; }
+
+/* ── BOTTOM NAV BAR ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 150;
+  background: rgba(13,17,36,0.97);
+  backdrop-filter: blur(24px);
+  border-top: 1px solid var(--card-border);
+  display: flex;
+  align-items: stretch;
+  height: 64px;
+  padding: 0 0.5rem;
+}
+
+.bnav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: color 0.2s ease;
+  border: none;
+  background: none;
+  padding: 0.3rem 0;
+  border-radius: 10px;
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.bnav-item:hover { color: var(--text); }
+.bnav-item.active { color: var(--lavender); }
+
+.bnav-item svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.8;
+}
+
+.bnav-item.active svg {
+  filter: drop-shadow(0 0 6px rgba(201,184,232,0.5));
+}
+
+/* ── INTENSITY SLIDER ── */
+.intensity-track {
+  position: relative;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.intensity-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.intensity-slider-wrap {
+  position: relative;
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+.intensity-bar-bg {
+  position: absolute;
+  left: 0; right: 0;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right,
+    rgba(106,212,148,0.4) 0%,
+    rgba(201,184,232,0.4) 40%,
+    rgba(232,145,145,0.5) 80%,
+    rgba(255,80,80,0.6) 100%);
+  pointer-events: none;
+}
+
+input[type="range"].intensity-input {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: transparent;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  border: none;
+  padding: 0;
+}
+
+input[type="range"].intensity-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--lavender);
+  border: 2px solid rgba(13,17,36,0.8);
+  box-shadow: 0 0 10px rgba(201,184,232,0.5);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+input[type="range"].intensity-input::-webkit-slider-thumb:active {
+  transform: scale(1.15);
+}
+
+input[type="range"].intensity-input::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--lavender);
+  border: 2px solid rgba(13,17,36,0.8);
+  cursor: pointer;
+}
+
+.intensity-value-display {
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  color: var(--lavender);
+  margin-top: 0.25rem;
+  min-height: 1.6rem;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 400px) {
   .page-title { font-size: 1.6rem; }
@@ -1333,7 +1489,7 @@ textarea { min-height: 80px; line-height: 1.6; }
 
     <div class="nav-section">
       <div class="nav-label">Daily</div>
-      <div class="nav-item active" onclick="navigate('home')">
+      <div class="nav-item active" onclick="navigateTo('home')">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -1341,14 +1497,14 @@ textarea { min-height: 80px; line-height: 1.6; }
           </svg>
         </span> Home
       </div>
-      <div class="nav-item" onclick="navigate('win-of-day')">
+      <div class="nav-item" onclick="navigateTo('win-of-day')">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
           </svg>
         </span> Win of the Day
       </div>
-      <div class="nav-item" onclick="navigate('mood-tracker')">
+      <div class="nav-item" onclick="navigateTo('mood-tracker')">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="20" x2="18" y2="10"></line>
@@ -1361,21 +1517,21 @@ textarea { min-height: 80px; line-height: 1.6; }
 
     <div class="nav-section">
       <div class="nav-label">Self-Care</div>
-      <div class="nav-item" onclick="navigate('compassion')">
+      <div class="nav-item" onclick="navigateTo('compassion')">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
           </svg>
         </span> Self-Compassion
       </div>
-      <div class="nav-item" onclick="navigate('breathing')">
+      <div class="nav-item" onclick="navigateTo('breathing')">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"></circle>
           </svg>
         </span> Breathing
       </div>
-      <div class="nav-item" onclick="navigate('music')">
+      <div class="nav-item" onclick="navigateTo('music')">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 18V5l12-2v13"></path>
@@ -1388,7 +1544,7 @@ textarea { min-height: 80px; line-height: 1.6; }
 
     <div class="nav-section">
       <div class="nav-label">CBT Tools</div>
-      <div class="nav-item" onclick="navigate('thought-record')">
+      <div class="nav-item" onclick="navigateTo('thought-record')">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -1396,7 +1552,7 @@ textarea { min-height: 80px; line-height: 1.6; }
           </svg>
         </span> Thought Record
       </div>
-      <div class="nav-item" onclick="navigate('thought-testing')">
+      <div class="nav-item" onclick="navigateTo('thought-testing')">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
@@ -1404,7 +1560,7 @@ textarea { min-height: 80px; line-height: 1.6; }
           </svg>
         </span> Testing Thoughts
       </div>
-      <div class="nav-item" onclick="navigate('activation')">
+      <div class="nav-item" onclick="navigateTo('activation')">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
@@ -1415,7 +1571,7 @@ textarea { min-height: 80px; line-height: 1.6; }
 
     <div class="nav-section">
       <div class="nav-label">More</div>
-      <div class="nav-item" onclick="navigate('habits')">
+      <div class="nav-item" onclick="navigateTo('habits')">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -1423,7 +1579,7 @@ textarea { min-height: 80px; line-height: 1.6; }
           </svg>
         </span> Daily Habits
       </div>
-      <div class="nav-item" onclick="navigate('entries')">
+      <div class="nav-item" onclick="navigateTo('entries')">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
@@ -1431,7 +1587,7 @@ textarea { min-height: 80px; line-height: 1.6; }
           </svg>
         </span> Past Entries
       </div>
-      <div class="nav-item" onclick="navigate('settings')">
+      <div class="nav-item" onclick="navigateTo('settings')">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"></circle>
@@ -1455,50 +1611,50 @@ textarea { min-height: 80px; line-height: 1.6; }
       </div>
 
       <div class="home-grid">
-        <div class="home-tile" onclick="navigate('win-of-day')">
+        <div class="home-tile" onclick="navigateTo('win-of-day')">
           <div class="tile-label">Today's Win</div>
           <div class="tile-content">
-            <span class="tile-icon">🌟</span>
+            <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
             <span id="home-win">Add one</span>
           </div>
         </div>
 
-        <div class="home-tile" onclick="navigate('mood-tracker')">
+        <div class="home-tile" onclick="navigateTo('mood-tracker')">
           <div class="tile-label">Mood Check</div>
           <div class="tile-content">
-            <span class="tile-icon">📊</span>
+            <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></span>
             <span id="home-mood">Track it</span>
           </div>
         </div>
 
-        <div class="home-tile" onclick="navigate('habits')">
+        <div class="home-tile" onclick="navigateTo('habits')">
           <div class="tile-label">Water</div>
           <div class="tile-content">
-            <span class="tile-icon">💧</span>
+            <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#7ecfff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></span>
             <span id="home-water">0 / 8</span>
           </div>
         </div>
 
-        <div class="home-tile" onclick="navigate('habits')">
+        <div class="home-tile" onclick="navigateTo('habits')">
           <div class="tile-label">Sleep</div>
           <div class="tile-content">
-            <span class="tile-icon">🌙</span>
+            <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--moon)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
             <span id="home-sleep">—</span>
           </div>
         </div>
 
-        <div class="home-tile" onclick="navigate('habits')">
+        <div class="home-tile" onclick="navigateTo('habits')">
           <div class="tile-label">Movement</div>
           <div class="tile-content">
-            <span class="tile-icon">🏃</span>
+            <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#a8e6a3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><path d="M9 19l1.5-6L8 11l2-5"/><path d="M15 19l-1.5-6L16 11l-2-5"/><path d="M8 11l-2 2"/><path d="M16 11l2 2"/></svg></span>
             <span id="home-movement">—</span>
           </div>
         </div>
 
-        <div class="home-tile" onclick="navigate('compassion')">
+        <div class="home-tile" onclick="navigateTo('compassion')">
           <div class="tile-label">Self-Compassion</div>
           <div class="tile-content">
-            <span class="tile-icon">💝</span>
+            <span class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--blush)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
             <span>Practice</span>
           </div>
         </div>
@@ -1507,9 +1663,9 @@ textarea { min-height: 80px; line-height: 1.6; }
       <div class="card">
         <div class="card-title">✦ Quick Start</div>
         <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-          <button class="btn btn-primary" onclick="navigate('thought-record')">Record a Thought</button>
-          <button class="btn" onclick="navigate('breathing')">Breathing Exercise</button>
-          <button class="btn" onclick="navigate('music')">Play Calm Sounds</button>
+          <button class="btn btn-primary" onclick="navigateTo('thought-record')">Record a Thought</button>
+          <button class="btn" onclick="navigateTo('breathing')">Breathing Exercise</button>
+          <button class="btn" onclick="navigateTo('music')">Play Calm Sounds</button>
         </div>
       </div>
     </div>
@@ -1524,7 +1680,7 @@ textarea { min-height: 80px; line-height: 1.6; }
       </div>
 
       <div class="card win-input-section">
-        <div class="card-title">🌟 Today's Win</div>
+        <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Today's Win</div>
         <label>What went well today?</label>
         <textarea id="win-input" placeholder="Maybe you got out of bed, made a meal, talked to a friend, finished a task... all wins count!"></textarea>
         
@@ -1534,10 +1690,10 @@ textarea { min-height: 80px; line-height: 1.6; }
       </div>
 
       <div class="card">
-        <div class="card-title">✨ Past Wins</div>
+        <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" opacity="0.5"/><circle cx="12" cy="12" r="3"/></svg> Past Wins</div>
         <div id="wins-list" class="win-list"></div>
         <div id="no-wins" class="empty-state" style="display: none;">
-          <div class="empty-state-icon">🌟</div>
+          <div class="empty-state-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
           <div>No wins recorded yet. Add your first one above!</div>
         </div>
       </div>
@@ -1553,7 +1709,7 @@ textarea { min-height: 80px; line-height: 1.6; }
       </div>
 
       <div class="card">
-        <div class="card-title">📊 This Month</div>
+        <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> This Month</div>
         
         <div class="calendar-header">
           <div>SUN</div>
@@ -1570,23 +1726,23 @@ textarea { min-height: 80px; line-height: 1.6; }
         <div class="mood-legend">
           <div class="legend-item">
             <div class="legend-dot" style="border-color: rgba(106, 212, 148, 0.5); background: rgba(106, 212, 148, 0.15);"></div>
-            <span>😊 Great</span>
+            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(106,212,148,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:middle"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg> Great</span>
           </div>
           <div class="legend-item">
             <div class="legend-dot" style="border-color: rgba(201, 184, 232, 0.5); background: rgba(201, 184, 232, 0.15);"></div>
-            <span>🙂 Good</span>
+            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(201,184,232,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:middle"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 1.5 4 1.5 4-1.5 4-1.5"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg> Good</span>
           </div>
           <div class="legend-item">
             <div class="legend-dot" style="border-color: rgba(212, 169, 106, 0.5); background: rgba(212, 169, 106, 0.15);"></div>
-            <span>😐 Okay</span>
+            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(212,169,106,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:middle"><circle cx="12" cy="12" r="10"/><line x1="8" y1="15" x2="16" y2="15"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg> Okay</span>
           </div>
           <div class="legend-item">
             <div class="legend-dot" style="border-color: rgba(232, 152, 152, 0.5); background: rgba(232, 152, 152, 0.15);"></div>
-            <span>😔 Low</span>
+            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(232,152,152,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:middle"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg> Low</span>
           </div>
           <div class="legend-item">
             <div class="legend-dot" style="border-color: rgba(139, 92, 246, 0.5); background: rgba(139, 92, 246, 0.15);"></div>
-            <span>😞 Struggling</span>
+            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:middle"><circle cx="12" cy="12" r="10"/><path d="M16 17s-1.5-3-4-3-4 3-4 3"/><line x1="9" y1="8" x2="9.01" y2="8"/><line x1="15" y1="8" x2="15.01" y2="8"/></svg> Struggling</span>
           </div>
         </div>
       </div>
@@ -1594,11 +1750,26 @@ textarea { min-height: 80px; line-height: 1.6; }
       <div class="card">
         <div class="card-title">How are you feeling today?</div>
         <div class="mood-dots">
-          <div class="mood-dot" onclick="logMood('great', this)" title="Great">😊</div>
-          <div class="mood-dot" onclick="logMood('good', this)" title="Good">🙂</div>
-          <div class="mood-dot" onclick="logMood('okay', this)" title="Okay">😐</div>
-          <div class="mood-dot" onclick="logMood('low', this)" title="Low">😔</div>
-          <div class="mood-dot" onclick="logMood('struggling', this)" title="Struggling">😞</div>
+          <div class="mood-dot" onclick="logMood('great', this)" title="Great"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(106,212,148,0.8)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2.5 4 2.5 4-2.5 4-2.5"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="2.5"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="2.5"/></svg></div>
+          <div class="mood-dot" onclick="logMood('good', this)" title="Good"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(201,184,232,0.8)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 1.5 4 1.5 4-1.5 4-1.5"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="2.5"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="2.5"/></svg></div>
+          <div class="mood-dot" onclick="logMood('okay', this)" title="Okay"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(212,169,106,0.8)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="15" x2="16" y2="15"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="2.5"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="2.5"/></svg></div>
+          <div class="mood-dot" onclick="logMood('low', this)" title="Low"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(232,152,152,0.8)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="2.5"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="2.5"/></svg></div>
+          <div class="mood-dot" onclick="logMood('struggling', this)" title="Struggling"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,0.8)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 17s-1.5-3-4-3-4 3-4 3"/><line x1="9" y1="8" x2="9.01" y2="8" stroke-width="2.5"/><line x1="15" y1="8" x2="15.01" y2="8" stroke-width="2.5"/></svg></div>
+        </div>
+
+        <label style="margin-top: 1.25rem;">How intense is this feeling?</label>
+        <div class="intensity-track">
+          <div class="intensity-labels">
+            <span>Gentle ripple</span>
+            <span>Noticeable</span>
+            <span>Seastorm</span>
+          </div>
+          <div class="intensity-slider-wrap">
+            <div class="intensity-bar-bg"></div>
+            <input type="range" class="intensity-input" id="mood-intensity" min="0" max="10" value="5"
+              oninput="document.getElementById('mood-intensity-val').textContent = this.value">
+          </div>
+          <div class="intensity-value-display" id="mood-intensity-val">5</div>
         </div>
       </div>
     </div>
@@ -1613,7 +1784,7 @@ textarea { min-height: 80px; line-height: 1.6; }
       </div>
 
       <div class="card">
-        <div class="card-title">💝 Guided Prompts</div>
+        <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blush)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Guided Prompts</div>
         
         <div class="compassion-prompt">
           <div class="prompt-category">When You're Struggling</div>
@@ -1647,7 +1818,7 @@ textarea { min-height: 80px; line-height: 1.6; }
       </div>
 
       <div class="card">
-        <div class="card-title">✍️ Your Reflection</div>
+        <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Your Reflection</div>
         <label>What came up for you during these exercises?</label>
         <textarea id="compassion-reflection" placeholder="Write about your experience..."></textarea>
         
@@ -1676,45 +1847,45 @@ textarea { min-height: 80px; line-height: 1.6; }
         </div>
 
         <div class="volume-control">
-          <span style="font-size: 0.9rem;">🔉</span>
+          <span style="font-size: 0.9rem; display:inline-flex; align-items:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="15" y1="10" x2="19" y2="14"/><line x1="19" y1="10" x2="15" y2="14"/></svg></span>
           <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="50" onchange="updateVolume(this.value)">
-          <span style="font-size: 0.9rem;">🔊</span>
+          <span style="font-size: 0.9rem; display:inline-flex; align-items:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></span>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">🎵 Playlist</div>
+        <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> Playlist</div>
         <div class="playlist">
           <div class="playlist-item" onclick="selectTrack(0, this)">
-            <span class="track-name">🌊 Ocean Waves</span>
+            <span class="track-name"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:middle"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>Ocean Waves</span>
             <span style="font-size: 0.75rem; color: var(--muted);">10:00</span>
           </div>
           <div class="playlist-item" onclick="selectTrack(1, this)">
-            <span class="track-name">🌧️ Gentle Rain</span>
+            <span class="track-name"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:middle"><line x1="8" y1="19" x2="8" y2="21"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="16" y1="19" x2="16" y2="21"/><line x1="16" y1="13" x2="16" y2="15"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="12" y1="15" x2="12" y2="17"/><path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/></svg>Gentle Rain</span>
             <span style="font-size: 0.75rem; color: var(--muted);">10:00</span>
           </div>
           <div class="playlist-item" onclick="selectTrack(2, this)">
-            <span class="track-name">🔥 Crackling Fire</span>
+            <span class="track-name"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:middle"><path d="M12 12c2-2.96 0-7-1-8"/><path d="M12 12c2 2.96 0 7-1 8"/><path d="M12 12c-2-2.96 0-7 1-8"/><path d="M12 12c-2 2.96 0 7 1 8"/></svg>Crackling Fire</span>
             <span style="font-size: 0.75rem; color: var(--muted);">10:00</span>
           </div>
           <div class="playlist-item" onclick="selectTrack(3, this)">
-            <span class="track-name">🌲 Forest Ambience</span>
+            <span class="track-name"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:middle"><path d="M17 8C8 10 5.9 16.17 3.82 20.9"/><path d="M9.08 9.37C8 11.5 7.5 14 7 20.9"/><path d="M21 12c-4 0-8 4-8 8"/></svg>Forest Ambience</span>
             <span style="font-size: 0.75rem; color: var(--muted);">10:00</span>
           </div>
           <div class="playlist-item" onclick="selectTrack(4, this)">
-            <span class="track-name">☕ Coffee Shop</span>
+            <span class="track-name"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:middle"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>Coffee Shop</span>
             <span style="font-size: 0.75rem; color: var(--muted);">10:00</span>
           </div>
           <div class="playlist-item" onclick="selectTrack(5, this)">
-            <span class="track-name">⛰️ Mountain Wind</span>
+            <span class="track-name"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:middle"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>Mountain Wind</span>
             <span style="font-size: 0.75rem; color: var(--muted);">10:00</span>
           </div>
           <div class="playlist-item" onclick="selectTrack(6, this)">
-            <span class="track-name">🌌 Night Sounds</span>
+            <span class="track-name"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:middle"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Night Sounds</span>
             <span style="font-size: 0.75rem; color: var(--muted);">10:00</span>
           </div>
           <div class="playlist-item" onclick="selectTrack(7, this)">
-            <span class="track-name">🎹 Piano Ambient</span>
+            <span class="track-name"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:middle"><rect x="2" y="14" width="4" height="6" rx="1"/><rect x="9" y="9" width="4" height="11" rx="1"/><rect x="16" y="4" width="4" height="16" rx="1"/></svg>Piano Ambient</span>
             <span style="font-size: 0.75rem; color: var(--muted);">10:00</span>
           </div>
         </div>
@@ -1722,7 +1893,7 @@ textarea { min-height: 80px; line-height: 1.6; }
 
       <div class="card" style="background: rgba(201,184,232,0.05); border-color: rgba(201,184,232,0.15);">
         <div style="font-size: 0.85rem; line-height: 1.6; color: var(--muted);">
-          <strong style="color: var(--lavender);">💡 Note:</strong> These are placeholder tracks. To add real audio files:
+          <strong style="color: var(--lavender);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>Note:</strong> These are placeholder tracks. To add real audio files:
           <ol style="margin: 0.5rem 0 0 1.2rem; line-height: 1.8;">
             <li>Upload .mp3 files to your GitHub repository (e.g., sounds/ocean.mp3)</li>
             <li>Update the playlist array in the JavaScript code</li>
@@ -1770,8 +1941,20 @@ textarea { min-height: 80px; line-height: 1.6; }
         <label>What thoughts went through your mind?</label>
         <textarea id="tr-thoughts" placeholder="What did you think in that moment?"></textarea>
 
-        <label>How intense was the feeling? (0-10)</label>
-        <input type="number" id="tr-intensity" min="0" max="10" placeholder="0 = barely felt it, 10 = overwhelming">
+        <label>How intense was the feeling?</label>
+        <div class="intensity-track">
+          <div class="intensity-labels">
+            <span>Barely felt it</span>
+            <span>Moderate</span>
+            <span>Overwhelming</span>
+          </div>
+          <div class="intensity-slider-wrap">
+            <div class="intensity-bar-bg"></div>
+            <input type="range" class="intensity-input" id="tr-intensity" min="0" max="10" value="5"
+              oninput="document.getElementById('tr-intensity-val').textContent = this.value">
+          </div>
+          <div class="intensity-value-display" id="tr-intensity-val">5</div>
+        </div>
 
         <label>Alternative perspective (optional)</label>
         <textarea id="tr-alternative" placeholder="Looking back, is there another way to see this?"></textarea>
@@ -1848,11 +2031,11 @@ textarea { min-height: 80px; line-height: 1.6; }
         <label>Break it into micro-steps</label>
         <div id="ba-steps">
           <div class="action-step-row">
-            <div class="step-check" onclick="toggleStep(this)">✓</div>
+            <div class="step-check" onclick="toggleStep(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
             <input type="text" placeholder="First tiny step...">
           </div>
           <div class="action-step-row">
-            <div class="step-check" onclick="toggleStep(this)">✓</div>
+            <div class="step-check" onclick="toggleStep(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
             <input type="text" placeholder="Second tiny step...">
           </div>
         </div>
@@ -1916,27 +2099,27 @@ textarea { min-height: 80px; line-height: 1.6; }
       </div>
 
       <div class="card">
-        <div class="card-title">💧 Water</div>
+        <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7ecfff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg> Water</div>
         <div id="water-count-label" style="margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--muted);">0 of 8 glasses</div>
         <div id="water-bubbles" class="water-bubbles"></div>
       </div>
 
       <div class="card">
-        <div class="card-title">🌙 Sleep</div>
+        <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--moon)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> Sleep</div>
         <label>Hours slept</label>
         <input type="number" id="h-sleep-hours" min="0" max="24" step="0.5" placeholder="7.5" onchange="updateHomeHabit('sleep', this.value + 'h')">
         
         <label>Quality</label>
         <div class="mood-dots">
-          <div class="mood-dot" onclick="selectMood(this, 'sleep')" title="Great">😊</div>
-          <div class="mood-dot" onclick="selectMood(this, 'sleep')" title="Good">🙂</div>
-          <div class="mood-dot" onclick="selectMood(this, 'sleep')" title="Okay">😐</div>
-          <div class="mood-dot" onclick="selectMood(this, 'sleep')" title="Poor">😔</div>
+          <div class="mood-dot" onclick="selectMood(this, 'sleep')" title="Great"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(106,212,148,0.8)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2.5 4 2.5 4-2.5 4-2.5"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="2.5"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="2.5"/></svg></div>
+          <div class="mood-dot" onclick="selectMood(this, 'sleep')" title="Good"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(201,184,232,0.8)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 1.5 4 1.5 4-1.5 4-1.5"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="2.5"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="2.5"/></svg></div>
+          <div class="mood-dot" onclick="selectMood(this, 'sleep')" title="Okay"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(212,169,106,0.8)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="15" x2="16" y2="15"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="2.5"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="2.5"/></svg></div>
+          <div class="mood-dot" onclick="selectMood(this, 'sleep')" title="Poor"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(232,152,152,0.8)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="2.5"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="2.5"/></svg></div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">🥗 Nutrition</div>
+        <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a8e6a3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg> Nutrition</div>
         <label>How did you eat today?</label>
         <select id="h-nutrition" onchange="updateHomeHabit('nutrition', this.value)">
           <option value="">—</option>
@@ -1948,7 +2131,7 @@ textarea { min-height: 80px; line-height: 1.6; }
       </div>
 
       <div class="card">
-        <div class="card-title">🏃 Movement</div>
+        <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a8e6a3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><path d="M9 19l1.5-6L8 11l2-5"/><path d="M15 19l-1.5-6L16 11l-2-5"/><path d="M8 11l-2 2"/><path d="M16 11l2 2"/></svg> Movement</div>
         <label>Type</label>
         <input type="text" id="h-movement-type" placeholder="Walking, yoga, stretching, dancing..." onchange="updateHomeHabit('movement', this.value)">
         
@@ -1972,7 +2155,7 @@ textarea { min-height: 80px; line-height: 1.6; }
 
       <div id="entries-list"></div>
       <div id="no-entries" class="empty-state">
-        <div class="empty-state-icon">📖</div>
+        <div class="empty-state-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
         <div>No entries yet. Start by recording a thought or tracking your mood!</div>
       </div>
     </div>
@@ -1987,7 +2170,7 @@ textarea { min-height: 80px; line-height: 1.6; }
       </div>
 
       <div class="card">
-        <div class="card-title">💾 Data Management</div>
+        <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Data Management</div>
         
         <div class="settings-section">
           <button class="btn btn-primary" onclick="exportData()">
@@ -2010,7 +2193,7 @@ textarea { min-height: 80px; line-height: 1.6; }
       </div>
 
       <div class="card">
-        <div class="card-title">ℹ️ About</div>
+        <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> About</div>
         <p style="line-height: 1.6; color: var(--muted); font-size: 0.85rem;">
           Swing is a gentle space for self-reflection and emotional wellness. 
           All your data is stored locally on your device — nothing is sent to any server.
@@ -2022,6 +2205,47 @@ textarea { min-height: 80px; line-height: 1.6; }
     </div>
   </div>
 </div>
+
+<!-- BOTTOM NAV BAR -->
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="bnav-item active" onclick="navigateTo('home')" data-screen="home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+    </svg>
+    Home
+  </button>
+  <button class="bnav-item" onclick="navigateTo('mood-tracker')" data-screen="mood-tracker">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+      <line x1="9" y1="9" x2="9.01" y2="9"></line>
+      <line x1="15" y1="9" x2="15.01" y2="9"></line>
+    </svg>
+    Mood
+  </button>
+  <button class="bnav-item" onclick="navigateTo('thought-record')" data-screen="thought-record">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+    </svg>
+    Thoughts
+  </button>
+  <button class="bnav-item" onclick="navigateTo('breathing')" data-screen="breathing">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M8 12s1.5-2 4-2 4 2 4 2"></path>
+    </svg>
+    Breathe
+  </button>
+  <button class="bnav-item" onclick="navigateTo('habits')" data-screen="habits">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+    </svg>
+    Habits
+  </button>
+</nav>
 
 <!-- TOAST -->
 <div id="toast" class="toast"></div>
@@ -2092,38 +2316,83 @@ document.addEventListener('click', (e) => {
   }
 });
 
-function navigate(screenId) {
+function navigateTo(screenId) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(screenId).classList.add('active');
-  
+  const screen = document.getElementById(screenId);
+  if (screen) screen.classList.add('active');
+
+  // Update drawer nav
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const navItem = Array.from(document.querySelectorAll('.nav-item')).find(n => 
-    n.textContent.toLowerCase().includes(screenId.replace('-', ' '))
+  const navItem = Array.from(document.querySelectorAll('.nav-item')).find(n =>
+    n.getAttribute('onclick') && n.getAttribute('onclick').includes(`'${screenId}'`)
   );
   if (navItem) navItem.classList.add('active');
-  
-  toggleNav();
+
+  // Update bottom nav
+  document.querySelectorAll('.bnav-item').forEach(b => {
+    b.classList.toggle('active', b.dataset.screen === screenId);
+  });
+
+  // Close drawer if open
+  document.querySelector('.nav-drawer')?.classList.remove('open');
+  document.querySelector('.nav-overlay')?.classList.remove('show');
+
   window.scrollTo(0, 0);
-  
-  // Initialize screens when navigating to them
+
   if (screenId === 'mood-tracker') renderMoodCalendar();
   if (screenId === 'win-of-day') renderWins();
   if (screenId === 'entries') renderEntries();
 }
 
+
+
 // ════════════════════════════════════════════════════════════
-// STORAGE
+// STORAGE — uses window.storage for persistence
 // ════════════════════════════════════════════════════════════
-let savedEntries = JSON.parse(localStorage.getItem('swing_entries') || '[]');
-let habitData = JSON.parse(localStorage.getItem('swing_habits') || '{}');
+let savedEntries = [];
+let habitData = {};
 let waterCount = 0;
-let wins = JSON.parse(localStorage.getItem('swing_wins') || '[]');
-let moodData = JSON.parse(localStorage.getItem('swing_moods') || '{}');
+let wins = [];
+let moodData = {};
+
+async function storageGet(key, fallback) {
+  try {
+    const result = await window.storage.get(key);
+    return result ? JSON.parse(result.value) : fallback;
+  } catch(e) { return fallback; }
+}
+
+async function storageSet(key, value) {
+  try { await window.storage.set(key, JSON.stringify(value)); } catch(e) {}
+}
+
+async function initStorage() {
+  savedEntries = await storageGet('swing_entries', []);
+  habitData    = await storageGet('swing_habits', {});
+  wins         = await storageGet('swing_wins', []);
+  moodData     = await storageGet('swing_moods', {});
+  // Restore today's water count
+  const today = new Date().toISOString().slice(0,10);
+  waterCount = habitData[today]?.water || 0;
+  initWaterBubbles();
+  renderEntries();
+  renderWins();
+  renderMoodCalendar();
+  updateHomeWin();
+  updateHomeMood();
+  // Restore home habit tiles
+  if (habitData[today]) {
+    const h = habitData[today];
+    if (h.sleep) document.getElementById('home-sleep').textContent = h.sleep + 'h';
+    if (h.movement) document.getElementById('home-movement').textContent = h.movement;
+    document.getElementById('home-water').textContent = `${waterCount} / 8`;
+  }
+}
 
 // ════════════════════════════════════════════════════════════
 // WIN OF THE DAY
 // ════════════════════════════════════════════════════════════
-function saveWin() {
+async function saveWin() {
   const input = document.getElementById('win-input');
   const text = input.value.trim();
   
@@ -2139,7 +2408,7 @@ function saveWin() {
   };
   
   wins.unshift(win);
-  localStorage.setItem('swing_wins', JSON.stringify(wins));
+  await storageSet('swing_wins', wins);
   
   // Also add to entries for Past Entries screen
   const entry = {
@@ -2152,10 +2421,10 @@ function saveWin() {
   };
   
   savedEntries.unshift(entry);
-  localStorage.setItem('swing_entries', JSON.stringify(savedEntries));
+  await storageSet('swing_entries', savedEntries);
   
   input.value = '';
-  showToast('Win saved! 🌟');
+  showToast('Win saved! ✦');
   renderWins();
   renderEntries();
   updateHomeWin();
@@ -2185,7 +2454,7 @@ function renderWins() {
         <div class="win-month">${month}</div>
       </div>
       <div class="win-content">
-        <span class="win-icon">✨</span>${win.text}
+        <span class="win-icon-svg"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>${win.text}
       </div>
     `;
     list.appendChild(el);
@@ -2195,16 +2464,17 @@ function renderWins() {
 function updateHomeWin() {
   const today = new Date().toISOString().slice(0, 10);
   const todayWin = wins.find(w => w.date.startsWith(today));
-  document.getElementById('home-win').textContent = todayWin ? '✓ Done' : 'Add one';
+  document.getElementById('home-win').textContent = todayWin ? 'Done' : 'Add one';
 }
 
 // ════════════════════════════════════════════════════════════
 // MOOD TRACKER
 // ════════════════════════════════════════════════════════════
-function logMood(mood, el) {
+async function logMood(mood, el) {
   const today = new Date().toISOString().slice(0, 10);
-  moodData[today] = mood;
-  localStorage.setItem('swing_moods', JSON.stringify(moodData));
+  const intensity = document.getElementById('mood-intensity')?.value || 5;
+  moodData[today] = { mood, intensity: parseInt(intensity) };
+  await storageSet('swing_moods', moodData);
   
   // Update UI
   el.closest('.mood-dots').querySelectorAll('.mood-dot').forEach(d => d.classList.remove('selected'));
@@ -2237,23 +2507,25 @@ function renderMoodCalendar() {
   // Add days of month
   for (let day = 1; day <= daysInMonth; day++) {
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    const mood = moodData[dateStr];
+    const moodEntry = moodData[dateStr];
+    // Support both old string format and new {mood, intensity} format
+    const mood = moodEntry ? (typeof moodEntry === 'object' ? moodEntry.mood : moodEntry) : null;
     
     const dayEl = document.createElement('div');
     dayEl.className = 'mood-day';
     
     if (mood) {
       dayEl.classList.add('has-mood', `mood-${mood}`);
-      const emojis = {
-        great: '😊',
-        good: '🙂',
-        okay: '😐',
-        low: '😔',
-        struggling: '😞'
+      const svgFaces = {
+        great: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="rgba(106,212,148,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2.5 4 2.5 4-2.5 4-2.5"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="2.5"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="2.5"/></svg>`,
+        good:  `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="rgba(201,184,232,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 1.5 4 1.5 4-1.5 4-1.5"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="2.5"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="2.5"/></svg>`,
+        okay:  `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="rgba(212,169,106,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="15" x2="16" y2="15"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="2.5"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="2.5"/></svg>`,
+        low:   `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="rgba(232,152,152,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="2.5"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="2.5"/></svg>`,
+        struggling: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="rgba(139,92,246,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 17s-1.5-3-4-3-4 3-4 3"/><line x1="9" y1="8" x2="9.01" y2="8" stroke-width="2.5"/><line x1="15" y1="8" x2="15.01" y2="8" stroke-width="2.5"/></svg>`
       };
       dayEl.innerHTML = `
         <div class="day-number">${day}</div>
-        <div class="day-emoji">${emojis[mood]}</div>
+        <div class="day-emoji">${svgFaces[mood]}</div>
       `;
     } else {
       dayEl.innerHTML = `<div class="day-number">${day}</div>`;
@@ -2265,21 +2537,16 @@ function renderMoodCalendar() {
 
 function updateHomeMood() {
   const today = new Date().toISOString().slice(0, 10);
-  const todayMood = moodData[today];
-  const emojis = {
-    great: '😊',
-    good: '🙂',
-    okay: '😐',
-    low: '😔',
-    struggling: '😞'
-  };
-  document.getElementById('home-mood').textContent = todayMood ? emojis[todayMood] : 'Track it';
+  const todayMoodEntry = moodData[today];
+  const todayMood = todayMoodEntry ? (typeof todayMoodEntry === 'object' ? todayMoodEntry.mood : todayMoodEntry) : null;
+  const moodLabels = { great: 'Great', good: 'Good', okay: 'Okay', low: 'Low', struggling: 'Struggling' };
+  document.getElementById('home-mood').textContent = todayMood ? moodLabels[todayMood] : 'Track it';
 }
 
 // ════════════════════════════════════════════════════════════
 // SELF-COMPASSION
 // ════════════════════════════════════════════════════════════
-function saveCompassion() {
+async function saveCompassion() {
   const reflection = document.getElementById('compassion-reflection').value.trim();
   
   if (!reflection) {
@@ -2297,7 +2564,7 @@ function saveCompassion() {
   };
   
   savedEntries.unshift(entry);
-  localStorage.setItem('swing_entries', JSON.stringify(savedEntries));
+  await storageSet('swing_entries', savedEntries);
   document.getElementById('compassion-reflection').value = '';
   showToast('Reflection saved ✦');
   renderEntries();
@@ -2307,14 +2574,14 @@ function saveCompassion() {
 // MUSIC PLAYER
 // ════════════════════════════════════════════════════════════
 const playlist = [
-  { name: '🌊 Ocean Waves', file: 'sounds/ocean.mp3', duration: '10:00' },
-  { name: '🌧️ Gentle Rain', file: 'sounds/rain.mp3', duration: '10:00' },
-  { name: '🔥 Crackling Fire', file: 'sounds/fire.mp3', duration: '10:00' },
-  { name: '🌲 Forest Ambience', file: 'sounds/forest.mp3', duration: '10:00' },
-  { name: '☕ Coffee Shop', file: 'sounds/coffee.mp3', duration: '10:00' },
-  { name: '⛰️ Mountain Wind', file: 'sounds/wind.mp3', duration: '10:00' },
-  { name: '🌌 Night Sounds', file: 'sounds/night.mp3', duration: '10:00' },
-  { name: '🎹 Piano Ambient', file: 'sounds/piano.mp3', duration: '10:00' }
+  { name: 'Ocean Waves', file: 'sounds/ocean.mp3', duration: '10:00' },
+  { name: 'Gentle Rain', file: 'sounds/rain.mp3', duration: '10:00' },
+  { name: 'Crackling Fire', file: 'sounds/fire.mp3', duration: '10:00' },
+  { name: 'Forest Ambience', file: 'sounds/forest.mp3', duration: '10:00' },
+  { name: 'Coffee Shop', file: 'sounds/coffee.mp3', duration: '10:00' },
+  { name: 'Mountain Wind', file: 'sounds/wind.mp3', duration: '10:00' },
+  { name: 'Night Sounds', file: 'sounds/night.mp3', duration: '10:00' },
+  { name: 'Piano Ambient', file: 'sounds/piano.mp3', duration: '10:00' }
 ];
 
 let currentAudio = null;
@@ -2456,7 +2723,7 @@ function toggleTag(el) { el.classList.toggle('selected'); }
 // ════════════════════════════════════════════════════════════
 // SAVE CBT ENTRY
 // ════════════════════════════════════════════════════════════
-function saveCBTEntry(type) {
+async function saveCBTEntry(type) {
   let title, preview, tags = [];
 
   if (type === 'thought') {
@@ -2489,7 +2756,7 @@ function saveCBTEntry(type) {
   };
 
   savedEntries.unshift(entry);
-  localStorage.setItem('swing_entries', JSON.stringify(savedEntries));
+  await storageSet('swing_entries', savedEntries);
   showToast('Saved ✦');
   renderEntries();
 }
@@ -2539,7 +2806,7 @@ function initWaterBubbles() {
   for (let i = 0; i < 8; i++) {
     const b = document.createElement('div');
     b.className = 'bubble' + (i < waterCount ? ' filled' : '');
-    b.textContent = '💧';
+    b.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>';
     b.onclick = () => toggleBubble(b, i);
     container.appendChild(b);
   }
@@ -2562,7 +2829,7 @@ function updateHomeHabit(key, val) {
   if (map[key]) document.getElementById(map[key]).textContent = val || '—';
 }
 
-function saveHabits() {
+async function saveHabits() {
   const today = new Date().toISOString().slice(0, 10);
   habitData[today] = {
     sleep: document.getElementById('h-sleep-hours').value,
@@ -2571,7 +2838,7 @@ function saveHabits() {
     movement: document.getElementById('h-movement-type').value,
     movementMins: document.getElementById('h-movement-mins').value
   };
-  localStorage.setItem('swing_habits', JSON.stringify(habitData));
+  await storageSet('swing_habits', habitData);
   
   // Create a summary for the entry
   const summary = [];
@@ -2591,7 +2858,7 @@ function saveHabits() {
   };
   
   savedEntries.unshift(entry);
-  localStorage.setItem('swing_entries', JSON.stringify(savedEntries));
+  await storageSet('swing_entries', savedEntries);
   
   showToast('Habits saved ✦');
   renderEntries();
@@ -2601,7 +2868,7 @@ function saveHabits() {
   if (habitData[today].movement) document.getElementById('home-movement').textContent = habitData[today].movement;
 }
 
-initWaterBubbles();
+// water bubbles initialized via initStorage()
 
 // ════════════════════════════════════════════════════════════
 // BREATHING
@@ -2691,7 +2958,7 @@ function addStep() {
   const row = document.createElement('div');
   row.className = 'action-step-row';
   row.innerHTML = `
-    <div class="step-check" onclick="toggleStep(this)">✓</div>
+    <div class="step-check" onclick="toggleStep(this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
     <input type="text" placeholder="Another step...">
   `;
   container.appendChild(row);
@@ -2702,14 +2969,14 @@ function toggleStep(el) { el.classList.toggle('done'); }
 // ════════════════════════════════════════════════════════════
 // EXPORT / IMPORT DATA
 // ════════════════════════════════════════════════════════════
-function exportData() {
+async function exportData() {
   const data = {
     entries: savedEntries,
     habits: habitData,
     wins: wins,
     moods: moodData,
     exportDate: new Date().toISOString(),
-    version: '2.0'
+    version: '3.0'
   };
   
   const jsonStr = JSON.stringify(data, null, 2);
@@ -2727,33 +2994,33 @@ function exportData() {
   showToast('Data exported ✦');
 }
 
-function importData(event) {
+async function importData(event) {
   const file = event.target.files[0];
   if (!file) return;
   
   const reader = new FileReader();
-  reader.onload = (e) => {
+  reader.onload = async (e) => {
     try {
       const data = JSON.parse(e.target.result);
       
       if (data.entries) {
         savedEntries = data.entries;
-        localStorage.setItem('swing_entries', JSON.stringify(savedEntries));
+        await storageSet('swing_entries', savedEntries);
       }
       
       if (data.habits) {
         habitData = data.habits;
-        localStorage.setItem('swing_habits', JSON.stringify(habitData));
+        await storageSet('swing_habits', habitData);
       }
 
       if (data.wins) {
         wins = data.wins;
-        localStorage.setItem('swing_wins', JSON.stringify(wins));
+        await storageSet('swing_wins', wins);
       }
 
       if (data.moods) {
         moodData = data.moods;
-        localStorage.setItem('swing_moods', JSON.stringify(moodData));
+        await storageSet('swing_moods', moodData);
       }
       
       showToast('Data imported successfully ✦');
@@ -2786,8 +3053,7 @@ function showToast(msg) {
 // ════════════════════════════════════════════════════════════
 // INITIALIZE
 // ════════════════════════════════════════════════════════════
-updateHomeWin();
-updateHomeMood();
+initStorage();
 </script>
 </body>
 </html>
