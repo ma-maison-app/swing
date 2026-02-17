@@ -73,20 +73,21 @@ const FirebaseREST = {
   setDocument: async function(collection, docId, data) {
     if (!this.currentUser) throw new Error('Not authenticated');
     await this.refreshTokenIfNeeded();
-    const url = `${this.config.url}/rest/v1/${collection}`;
+    const url = `${this.config.url}/rest/v1/${collection}?on_conflict=user_id`;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'apikey': this.config.anonKey,
         'Authorization': `Bearer ${this.currentUser.token}`,
-        'Prefer': 'resolution=merge-duplicates'
+        'Prefer': 'return=minimal,resolution=merge-duplicates'
       },
-      body: JSON.stringify({ user_id: docId, ...this._flattenForSupabase(data) })
+      body: JSON.stringify({ user_id: docId, ...data })
     });
     if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.message || JSON.stringify(err));
+      let errText = '';
+      try { const err = await response.json(); errText = err.message || err.hint || JSON.stringify(err); } catch(e) { errText = response.statusText; }
+      throw new Error(errText);
     }
     return true;
   },
@@ -481,6 +482,19 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
 .toolkit-steps li { padding: 0.5rem 0; padding-left: 1.5rem; position: relative; }
 .toolkit-steps li:before { content: "•"; position: absolute; left: 0; color: var(--lavender); font-weight: bold; }
 
+
+/* ── EMOTION PICKER ── */
+.emotion-picker { margin-top: 0.75rem; }
+.emotion-category { margin-bottom: 0.75rem; }
+.emotion-category-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; display: block; }
+.emotion-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.emotion-chip { background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); color: var(--text); padding: 0.35rem 0.8rem; border-radius: 16px; font-size: 0.82rem; cursor: pointer; transition: all 0.2s ease; }
+.emotion-chip:hover { border-color: var(--lavender); color: var(--lavender); background: rgba(201,184,232,0.1); }
+.emotion-chip.selected { background: var(--lavender); color: var(--night); border-color: var(--lavender); }
+.emotion-picker-toggle { font-size: 0.82rem; color: var(--muted); cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem; margin-bottom: 0.5rem; padding: 0.3rem 0; border: none; background: none; font-family: inherit; }
+.emotion-picker-toggle:hover { color: var(--lavender); }
+.emotion-picker-body { display: none; }
+.emotion-picker-body.open { display: block; }
 /* ── RESPONSIVE ── */
 @media (max-width: 600px) {
   .title { font-size: 2.5rem; }
@@ -582,6 +596,70 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
           <div>
             <div class="helper-text">What emotions did you feel?</div>
             <input type="text" id="emotions" placeholder="e.g., anxious, sad, angry...">
+            <button class="emotion-picker-toggle" onclick="toggleEmotionPicker()" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+              Choose from list
+            </button>
+            <div class="emotion-picker-body" id="emotion-picker-body">
+              <div class="emotion-category">
+                <span class="emotion-category-label">😰 Anxiety &amp; Fear</span>
+                <div class="emotion-chips">
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">anxious</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">afraid</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">panicked</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">worried</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">nervous</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">tense</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">overwhelmed</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">insecure</span>
+                </div>
+              </div>
+              <div class="emotion-category">
+                <span class="emotion-category-label">😢 Sadness &amp; Loss</span>
+                <div class="emotion-chips">
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">sad</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">hopeless</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">lonely</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">empty</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">grieving</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">disappointed</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">heartbroken</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">helpless</span>
+                </div>
+              </div>
+              <div class="emotion-category">
+                <span class="emotion-category-label">😠 Anger &amp; Frustration</span>
+                <div class="emotion-chips">
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">angry</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">frustrated</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">irritated</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">resentful</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">bitter</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">jealous</span>
+                </div>
+              </div>
+              <div class="emotion-category">
+                <span class="emotion-category-label">😳 Shame &amp; Guilt</span>
+                <div class="emotion-chips">
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">ashamed</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">guilty</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">embarrassed</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">humiliated</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">inadequate</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">worthless</span>
+                </div>
+              </div>
+              <div class="emotion-category">
+                <span class="emotion-category-label">😮 Shock &amp; Confusion</span>
+                <div class="emotion-chips">
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">confused</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">shocked</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">numb</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">disconnected</span>
+                  <span class="emotion-chip" onclick="toggleEmotion(this)">lost</span>
+                </div>
+              </div>
+            </div>
           </div>
           <div>
             <label class="intensity-label">Intensity (1-10)</label>
@@ -850,7 +928,8 @@ async function saveRecordsToCloud() {
     });
     setSyncStatus('synced');
   } catch(e) {
-    console.error('Save failed:', e);
+    console.error('Save failed:', e.message);
+    showMsg('✗ ' + e.message, true);
     setSyncStatus('error');
     throw e;
   }
@@ -879,6 +958,25 @@ document.getElementById('intensity').addEventListener('input', (e) => {
 // COGNITIVE DISTORTIONS TOGGLE
 // ══════════════════════════════════════════════════════════════════════════════
 function toggleDistortion(el) { el.classList.toggle('selected'); }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// EMOTION PICKER
+// ══════════════════════════════════════════════════════════════════════════════
+function toggleEmotionPicker() {
+  const body = document.getElementById('emotion-picker-body');
+  body.classList.toggle('open');
+}
+
+function toggleEmotion(chip) {
+  chip.classList.toggle('selected');
+  const selected = Array.from(document.querySelectorAll('#emotion-picker-body .emotion-chip.selected')).map(c => c.textContent);
+  const input = document.getElementById('emotions');
+  // Keep any manually typed content that is not in our chip list, then add selected chips
+  const allChips = Array.from(document.querySelectorAll('#emotion-picker-body .emotion-chip')).map(c => c.textContent);
+  const currentParts = input.value.split(',').map(s => s.trim()).filter(s => s && !allChips.includes(s));
+  const merged = [...currentParts, ...selected];
+  input.value = merged.join(', ');
+}
 function toggleDistortionInfo(trigger) {
   trigger.classList.toggle('expanded');
   document.getElementById('distortion-details').classList.toggle('expanded');
@@ -1031,6 +1129,12 @@ function renderHistory() {
           <textarea id="edit-evidence-against-${realIndex}" placeholder="Evidence Against">${record.evidenceAgainst || ''}</textarea>
           <textarea id="edit-friend-response-${realIndex}" placeholder="If a Friend Said This...">${record.friendResponse || ''}</textarea>
           <textarea id="edit-conclusion-${realIndex}" placeholder="Balanced Conclusion">${record.conclusion || ''}</textarea>
+          <div style="margin-bottom:0.75rem;">
+            <div style="font-size:0.85rem;color:var(--muted);margin-bottom:0.5rem;">Cognitive Distortions</div>
+            <div class="distortion-tags" id="edit-distortions-${realIndex}">
+              ${['All-or-Nothing','Overgeneralization','Catastrophizing','Mind Reading','Fortune Telling','Emotional Reasoning','Should Statements','Labeling','Personalization','Discounting the Positive'].map(d => `<span class="distortion-tag${record.distortions && record.distortions.includes(d) ? ' selected' : ''}" onclick="toggleDistortion(this)">${d}</span>`).join('')}
+            </div>
+          </div>
           <div class="edit-actions">
             <button class="icon-btn" onclick="saveEdit(${realIndex})" style="background:var(--lavender);color:var(--night);"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>Save Changes</button>
             <button class="icon-btn" onclick="cancelEdit(${realIndex})"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Cancel</button>
@@ -1065,7 +1169,8 @@ async function saveEdit(index) {
     evidenceFor: document.getElementById(`edit-evidence-for-${index}`).value,
     evidenceAgainst: document.getElementById(`edit-evidence-against-${index}`).value,
     friendResponse: document.getElementById(`edit-friend-response-${index}`).value,
-    conclusion: document.getElementById(`edit-conclusion-${index}`).value
+    conclusion: document.getElementById(`edit-conclusion-${index}`).value,
+    distortions: Array.from(document.querySelectorAll(`#edit-distortions-${index} .distortion-tag.selected`)).map(el => el.textContent)
   };
   try {
     await saveRecordsToCloud();
