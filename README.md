@@ -405,7 +405,7 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
 .distortion-info-trigger svg { width: 16px; height: 16px; transition: transform 0.3s ease; }
 .distortion-info-trigger.expanded svg:last-child { transform: rotate(180deg); }
 .distortion-details { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; margin-top: 0.5rem; }
-.distortion-details.expanded { max-height: 2000px; }
+.distortion-details.expanded { max-height: 6000px; }
 .distortion-item { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem; }
 .distortion-item:last-child { margin-bottom: 0; }
 .distortion-name { font-family: 'Playfair Display', serif; font-weight: 600; color: var(--lavender); font-size: 1rem; margin-bottom: 0.5rem; }
@@ -703,6 +703,11 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
           <span class="distortion-tag" onclick="toggleDistortion(this)">Labeling</span>
           <span class="distortion-tag" onclick="toggleDistortion(this)">Personalization</span>
           <span class="distortion-tag" onclick="toggleDistortion(this)">Discounting the Positive</span>
+          <span class="distortion-tag" onclick="toggleDistortion(this)">Mental Filter</span>
+          <span class="distortion-tag" onclick="toggleDistortion(this)">Magnification</span>
+          <span class="distortion-tag" onclick="toggleDistortion(this)">Minimization</span>
+          <span class="distortion-tag" onclick="toggleDistortion(this)">Self-Blame</span>
+          <span class="distortion-tag" onclick="toggleDistortion(this)">Comparison</span>
         </div>
         <div class="distortion-info-trigger" onclick="toggleDistortionInfo(this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
@@ -720,6 +725,11 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
           <div class="distortion-item"><div class="distortion-name">Labeling</div><div class="distortion-description">Assigning global negative traits to yourself or others.</div><div class="distortion-example">"I'm weak" — Reality: You reached out for help, went to therapy despite fear, spoke up about homophobia. That's strength.</div></div>
           <div class="distortion-item"><div class="distortion-name">Personalization</div><div class="distortion-description">Blaming yourself for things outside your control.</div><div class="distortion-example">"They didn't respond, so what I said must not matter" — Reality: Silence is theirs, not yours.</div></div>
           <div class="distortion-item"><div class="distortion-name">Discounting the Positive</div><div class="distortion-description">Rejecting positive experiences by insisting they "don't count."</div><div class="distortion-example">"Everyone is better than me" — Reality: You have unique strengths: B2-C1 English self-taught, best at French in your group.</div></div>
+          <div class="distortion-item"><div class="distortion-name">Mental Filter</div><div class="distortion-description">Focusing exclusively on one negative detail while ignoring everything else, like a drop of ink that colors the entire glass of water.</div><div class="distortion-example">"Someone criticized one thing I said, so the whole conversation was a failure" — Reality: Many positive things happened too.</div></div>
+          <div class="distortion-item"><div class="distortion-name">Magnification</div><div class="distortion-description">Blowing problems or flaws out of proportion — making them seem much bigger or more important than they are.</div><div class="distortion-example">"I made one mistake, this is a disaster" — Reality: One mistake doesn't define everything.</div></div>
+          <div class="distortion-item"><div class="distortion-name">Minimization</div><div class="distortion-description">Shrinking your achievements, strengths, or positive qualities so they seem much smaller than they actually are.</div><div class="distortion-example">"My English is okay I guess" — Reality: B2-C1 self-taught in one year is genuinely impressive.</div></div>
+          <div class="distortion-item"><div class="distortion-name">Self-Blame</div><div class="distortion-description">Holding yourself responsible for things that aren't entirely (or at all) your fault.</div><div class="distortion-example">"They're upset, it must be something I did" — Reality: Other people's emotions have many causes outside of you.</div></div>
+          <div class="distortion-item"><div class="distortion-name">Comparison</div><div class="distortion-description">Measuring yourself against others as a way to judge your worth — usually comparing your insides to their outsides.</div><div class="distortion-example">"Everyone else seems so confident and together" — Reality: You're comparing your inner experience to their outer presentation.</div></div>
         </div>
       </div>
 
@@ -1132,7 +1142,7 @@ function renderHistory() {
           <div style="margin-bottom:0.75rem;">
             <div style="font-size:0.85rem;color:var(--muted);margin-bottom:0.5rem;">Cognitive Distortions</div>
             <div class="distortion-tags" id="edit-distortions-${realIndex}">
-              ${['All-or-Nothing','Overgeneralization','Catastrophizing','Mind Reading','Fortune Telling','Emotional Reasoning','Should Statements','Labeling','Personalization','Discounting the Positive'].map(d => `<span class="distortion-tag${record.distortions && record.distortions.includes(d) ? ' selected' : ''}" onclick="toggleDistortion(this)">${d}</span>`).join('')}
+              ${['All-or-Nothing','Overgeneralization','Catastrophizing','Mind Reading','Fortune Telling','Emotional Reasoning','Should Statements','Labeling','Personalization','Discounting the Positive','Mental Filter','Magnification','Minimization','Self-Blame','Comparison'].map(d => `<span class="distortion-tag${record.distortions && record.distortions.includes(d) ? ' selected' : ''}" onclick="toggleDistortion(this)">${d}</span>`).join('')}
             </div>
           </div>
           <div class="edit-actions">
