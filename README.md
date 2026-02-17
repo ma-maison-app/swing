@@ -827,8 +827,8 @@ async function loadRecordsFromCloud() {
     setSyncStatus('syncing');
     const uid = FirebaseREST.currentUser.uid;
     const data = await FirebaseREST.getDocument('thoughtRecords', uid);
-    if (data && (data.recordsJson || data.recordsJSON)) {
-      cachedRecords = JSON.parse(data.recordsJson || data.recordsJSON);
+    if (data && (data.recordsJson || data.records_json || data.recordsJSON)) {
+      cachedRecords = JSON.parse(data.recordsJson || data.records_json || data.recordsJSON);
     } else {
       cachedRecords = [];
     }
@@ -845,8 +845,8 @@ async function saveRecordsToCloud() {
     setSyncStatus('syncing');
     const uid = FirebaseREST.currentUser.uid;
     await FirebaseREST.setDocument('thoughtRecords', uid, {
-      recordsJSON: JSON.stringify(cachedRecords),
-      updatedAt: new Date().toISOString()
+      records_json: JSON.stringify(cachedRecords),
+      updated_at: new Date().toISOString()
     });
     setSyncStatus('synced');
   } catch(e) {
