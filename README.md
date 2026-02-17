@@ -11,7 +11,7 @@
 
 <script>
 // ══════════════════════════════════════════════════════════════════════════════
-// ██████╗ FIREBASE REST API — No SDK needed
+// SUPABASE REST API — No SDK needed
 // ══════════════════════════════════════════════════════════════════════════════
 const FirebaseREST = {
   config: null,
@@ -24,108 +24,104 @@ const FirebaseREST = {
   },
 
   signUp: async function(email, password) {
-    const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.config.apiKey}`;
+    const url = `${this.config.url}/auth/v1/signup`;
     const response = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, returnSecureToken: true })
+      headers: { 'Content-Type': 'application/json', 'apikey': this.config.anonKey },
+      body: JSON.stringify({ email, password })
     });
     const data = await response.json();
-    if (data.error) throw new Error(data.error.message);
-    this.currentUser = { uid: data.localId, email: data.email, token: data.idToken, refreshToken: data.refreshToken };
+    if (data.error || data.msg) throw new Error(data.error_description || data.msg || data.error);
+    if (!data.access_token) throw new Error('Check your email to confirm your account before signing in.');
+    this.currentUser = { uid: data.user.id, email: data.user.email, token: data.access_token, refreshToken: data.refresh_token };
     await this.storeUser(this.currentUser);
     if (window._authCallback) window._authCallback(this.currentUser);
     return this.currentUser;
   },
 
   signIn: async function(email, password) {
-    const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.config.apiKey}`;
+    const url = `${this.config.url}/auth/v1/token?grant_type=password`;
     const response = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, returnSecureToken: true })
+      headers: { 'Content-Type': 'application/json', 'apikey': this.config.anonKey },
+      body: JSON.stringify({ email, password })
     });
     const data = await response.json();
-    if (data.error) throw new Error(data.error.message);
-    this.currentUser = { uid: data.localId, email: data.email, token: data.idToken, refreshToken: data.refreshToken };
+    if (data.error || data.error_description) throw new Error(data.error_description || data.error);
+    this.currentUser = { uid: data.user.id, email: data.user.email, token: data.access_token, refreshToken: data.refresh_token };
     await this.storeUser(this.currentUser);
     if (window._authCallback) window._authCallback(this.currentUser);
     return this.currentUser;
   },
 
   signOut: async function() {
+    if (this.currentUser) {
+      try {
+        await fetch(`${this.config.url}/auth/v1/logout`, {
+          method: 'POST',
+          headers: { 'apikey': this.config.anonKey, 'Authorization': `Bearer ${this.currentUser.token}` }
+        });
+      } catch(e) {}
+    }
     this.currentUser = null;
     this._memoryStore = {};
-    try { const db = await this._getDB(); const t = db.transaction([this._storeName], 'readwrite'); t.objectStore(this._storeName).delete('firebase_user'); } catch(e) {}
-    try { sessionStorage.removeItem('firebase_user'); } catch(e) {}
+    try { const db = await this._getDB(); const t = db.transaction([this._storeName], 'readwrite'); t.objectStore(this._storeName).delete('supabase_user'); } catch(e) {}
+    try { sessionStorage.removeItem('supabase_user'); } catch(e) {}
     if (window._authCallback) window._authCallback(null);
   },
 
   setDocument: async function(collection, docId, data) {
     if (!this.currentUser) throw new Error('Not authenticated');
     await this.refreshTokenIfNeeded();
-    const url = `https://firestore.googleapis.com/v1/projects/${this.config.projectId}/databases/(default)/documents/${collection}/${docId}`;
+    const url = `${this.config.url}/rest/v1/${collection}`;
     const response = await fetch(url, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.currentUser.token}` },
-      body: JSON.stringify({ fields: this.toFirestoreFormat(data) })
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': this.config.anonKey,
+        'Authorization': `Bearer ${this.currentUser.token}`,
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify({ user_id: docId, ...this._flattenForSupabase(data) })
     });
-    const result = await response.json();
-    if (result.error) throw new Error(result.error.message || JSON.stringify(result.error));
-    return result;
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.message || JSON.stringify(err));
+    }
+    return true;
   },
 
   getDocument: async function(collection, docId) {
     if (!this.currentUser) throw new Error('Not authenticated');
     await this.refreshTokenIfNeeded();
-    const url = `https://firestore.googleapis.com/v1/projects/${this.config.projectId}/databases/(default)/documents/${collection}/${docId}`;
-    const response = await fetch(url, { headers: { 'Authorization': `Bearer ${this.currentUser.token}` } });
+    const url = `${this.config.url}/rest/v1/${collection}?user_id=eq.${docId}&select=*`;
+    const response = await fetch(url, {
+      headers: { 'apikey': this.config.anonKey, 'Authorization': `Bearer ${this.currentUser.token}` }
+    });
     const result = await response.json();
-    if (result.error) { if (result.error.code === 404) return null; throw new Error(result.error.message); }
-    return this.fromFirestoreFormat(result.fields);
+    if (!response.ok) throw new Error(result.message || JSON.stringify(result));
+    if (!result || result.length === 0) return null;
+    return this._unflattenFromSupabase(result[0]);
   },
 
-  toFirestoreFormat: function(obj) {
-    const result = {};
-    for (const [key, value] of Object.entries(obj)) {
-      if (value === null) result[key] = { nullValue: null };
-      else if (typeof value === 'string') result[key] = { stringValue: value };
-      else if (typeof value === 'number') result[key] = { doubleValue: value };
-      else if (typeof value === 'boolean') result[key] = { booleanValue: value };
-      else if (Array.isArray(value)) {
-        result[key] = { arrayValue: { values: value.map(item => {
-          if (typeof item === 'object' && item !== null) return { mapValue: { fields: this.toFirestoreFormat(item) } };
-          if (typeof item === 'string') return { stringValue: item };
-          if (typeof item === 'number') return { doubleValue: item };
-          if (typeof item === 'boolean') return { booleanValue: item };
-          return { stringValue: String(item) };
-        })}};
-      } else if (typeof value === 'object') result[key] = { mapValue: { fields: this.toFirestoreFormat(value) } };
-      else result[key] = { stringValue: String(value) };
+  _flattenForSupabase: function(data) {
+    // Convert camelCase keys to snake_case for Supabase
+    const out = {};
+    for (const [k, v] of Object.entries(data)) {
+      const key = k.replace(/([A-Z])/g, '_$1').toLowerCase();
+      out[key] = v;
     }
-    return result;
+    return out;
   },
 
-  fromFirestoreFormat: function(fields) {
-    if (!fields) return null;
-    const result = {};
-    for (const [key, value] of Object.entries(fields)) {
-      if (value.stringValue !== undefined) result[key] = value.stringValue;
-      else if (value.doubleValue !== undefined) result[key] = value.doubleValue;
-      else if (value.integerValue !== undefined) result[key] = parseInt(value.integerValue);
-      else if (value.booleanValue !== undefined) result[key] = value.booleanValue;
-      else if (value.nullValue !== undefined) result[key] = null;
-      else if (value.arrayValue) {
-        result[key] = value.arrayValue.values ? value.arrayValue.values.map(item => {
-          if (item.mapValue) return this.fromFirestoreFormat(item.mapValue.fields);
-          if (item.stringValue !== undefined) return item.stringValue;
-          if (item.doubleValue !== undefined) return item.doubleValue;
-          if (item.booleanValue !== undefined) return item.booleanValue;
-          return item;
-        }) : [];
-      } else if (value.mapValue) result[key] = this.fromFirestoreFormat(value.mapValue.fields);
+  _unflattenFromSupabase: function(row) {
+    // Convert snake_case keys back to camelCase
+    const out = {};
+    for (const [k, v] of Object.entries(row)) {
+      const key = k.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+      out[key] = v;
     }
-    return result;
+    return out;
   },
 
   _memoryStore: {},
@@ -146,55 +142,59 @@ const FirebaseREST = {
 
   storeUser: async function(user) {
     const userData = { ...user, timestamp: Date.now() };
-    this._memoryStore.firebase_user = userData;
+    this._memoryStore.supabase_user = userData;
     try {
       const db = await this._getDB();
       const t = db.transaction([this._storeName], 'readwrite');
-      t.objectStore(this._storeName).put(userData, 'firebase_user');
+      t.objectStore(this._storeName).put(userData, 'supabase_user');
     } catch(e) {
-      try { sessionStorage.setItem('firebase_user', JSON.stringify(userData)); } catch(e2) {}
+      try { sessionStorage.setItem('supabase_user', JSON.stringify(userData)); } catch(e2) {}
     }
   },
 
   getStoredUser: async function() {
-    if (this._memoryStore.firebase_user) {
-      const u = this._memoryStore.firebase_user;
+    if (this._memoryStore.supabase_user) {
+      const u = this._memoryStore.supabase_user;
       if (Date.now() - u.timestamp < 60 * 60 * 1000) return u;
     }
     try {
       const db = await this._getDB();
       const t = db.transaction([this._storeName], 'readonly');
-      const request = t.objectStore(this._storeName).get('firebase_user');
+      const request = t.objectStore(this._storeName).get('supabase_user');
       const user = await new Promise((res, rej) => { request.onsuccess = () => res(request.result); request.onerror = () => rej(request.error); });
-      if (user && Date.now() - user.timestamp < 60 * 60 * 1000) { this._memoryStore.firebase_user = user; return user; }
+      if (user && Date.now() - user.timestamp < 60 * 60 * 1000) { this._memoryStore.supabase_user = user; return user; }
     } catch(e) {}
     try {
-      const stored = sessionStorage.getItem('firebase_user');
-      if (stored) { const user = JSON.parse(stored); if (Date.now() - user.timestamp < 60 * 60 * 1000) { this._memoryStore.firebase_user = user; return user; } }
+      const stored = sessionStorage.getItem('supabase_user');
+      if (stored) { const user = JSON.parse(stored); if (Date.now() - user.timestamp < 60 * 60 * 1000) { this._memoryStore.supabase_user = user; return user; } }
     } catch(e) {}
     return null;
   },
 
   refreshTokenIfNeeded: async function() {
     if (!this.currentUser) return;
-    const stored = this._memoryStore.firebase_user;
+    const stored = this._memoryStore.supabase_user;
     if (!stored || Date.now() - stored.timestamp < 50 * 60 * 1000) return;
-    const url = `https://securetoken.googleapis.com/v1/token?key=${this.config.apiKey}`;
-    const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ grant_type: 'refresh_token', refresh_token: this.currentUser.refreshToken }) });
+    const url = `${this.config.url}/auth/v1/token?grant_type=refresh_token`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': this.config.anonKey },
+      body: JSON.stringify({ refresh_token: this.currentUser.refreshToken })
+    });
     const data = await response.json();
     if (data.error) { await this.signOut(); throw new Error('Session expired'); }
-    this.currentUser.token = data.id_token;
+    this.currentUser.token = data.access_token;
     this.currentUser.refreshToken = data.refresh_token;
     await this.storeUser(this.currentUser);
   }
 };
 
 // ══════════════════════════════════════════════════════════════════════════════
-// 🔧 YOUR FIREBASE CONFIG — paste from Firebase console
+// 🔧 YOUR SUPABASE CONFIG
 // ══════════════════════════════════════════════════════════════════════════════
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  projectId: "YOUR_PROJECT_ID",
+  url: "https://zqkmxlzyuaiaynzdftec.supabase.co",
+  anonKey: "sb_publishable_FvEg7rSQePiFDN7rnwfsiw_lZB7pgSV",
 };
 
 (async () => {
@@ -793,12 +793,13 @@ async function handleSignup() {
 }
 
 function friendlyAuthError(msg) {
-  if (msg.includes('EMAIL_EXISTS')) return 'An account with this email already exists.';
-  if (msg.includes('INVALID_PASSWORD') || msg.includes('INVALID_LOGIN_CREDENTIALS')) return 'Incorrect email or password.';
-  if (msg.includes('USER_NOT_FOUND')) return 'No account found with this email.';
-  if (msg.includes('TOO_MANY_ATTEMPTS')) return 'Too many attempts. Please try again later.';
-  if (msg.includes('WEAK_PASSWORD')) return 'Password must be at least 6 characters.';
-  if (msg.includes('INVALID_EMAIL')) return 'Please enter a valid email address.';
+  if (msg.includes('User already registered') || msg.includes('already been registered')) return 'An account with this email already exists.';
+  if (msg.includes('Invalid login credentials') || msg.includes('invalid_credentials')) return 'Incorrect email or password.';
+  if (msg.includes('Email not confirmed')) return 'Please check your email and confirm your account first.';
+  if (msg.includes('Too many requests') || msg.includes('rate limit')) return 'Too many attempts. Please try again later.';
+  if (msg.includes('Password should be')) return 'Password must be at least 6 characters.';
+  if (msg.includes('valid email') || msg.includes('invalid email')) return 'Please enter a valid email address.';
+  if (msg.includes('Check your email')) return msg;
   return msg;
 }
 
@@ -826,8 +827,8 @@ async function loadRecordsFromCloud() {
     setSyncStatus('syncing');
     const uid = FirebaseREST.currentUser.uid;
     const data = await FirebaseREST.getDocument('thoughtRecords', uid);
-    if (data && data.recordsJSON) {
-      cachedRecords = JSON.parse(data.recordsJSON);
+    if (data && (data.recordsJson || data.recordsJSON)) {
+      cachedRecords = JSON.parse(data.recordsJson || data.recordsJSON);
     } else {
       cachedRecords = [];
     }
