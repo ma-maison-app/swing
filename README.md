@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Thought Record · CBT Worksheet</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;700&family=Allura&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Work+Sans:wght@300;400;500;600;700&family=Allura&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -239,7 +239,7 @@ const firebaseConfig = {
   --radius: 18px;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: 'DM Sans', sans-serif; background: var(--night); color: var(--text); min-height: 100vh; overflow-x: hidden; padding: 2rem 1rem; }
+body { font-family: 'Work Sans', sans-serif; background: var(--night); color: var(--text); min-height: 100vh; overflow-x: hidden; padding: 2rem 1rem; }
 #stars-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 
 /* ── AUTH OVERLAY ── */
@@ -278,7 +278,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--night); color: var(
 .auth-tab {
   flex: 1; background: none; border: none;
   color: var(--muted); padding: 0.75rem;
-  font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500;
+  font-family: 'Work Sans', sans-serif; font-size: 0.95rem; font-weight: 500;
   cursor: pointer; border-bottom: 2px solid transparent;
   transition: all 0.2s;
 }
@@ -290,7 +290,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--night); color: var(
   border-radius: 10px;
   padding: 0.85rem 1rem;
   color: var(--text);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Work Sans', sans-serif;
   font-size: 1rem;
   margin-bottom: 0.75rem;
   transition: border-color 0.2s;
@@ -302,7 +302,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--night); color: var(
   background: linear-gradient(135deg, var(--lavender), var(--blush));
   color: var(--night);
   border: none; border-radius: 10px;
-  padding: 0.9rem; font-family: 'DM Sans', sans-serif;
+  padding: 0.9rem; font-family: 'Work Sans', sans-serif;
   font-size: 1rem; font-weight: 600;
   cursor: pointer; margin-top: 0.5rem;
   transition: all 0.2s;
@@ -345,14 +345,14 @@ body { font-family: 'DM Sans', sans-serif; background: var(--night); color: var(
   background: none; border: 1px solid var(--card-border);
   color: var(--muted); padding: 0.3rem 0.8rem;
   border-radius: 20px; font-size: 0.8rem; cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Work Sans', sans-serif;
   transition: all 0.2s;
 }
 .signout-btn:hover { border-color: var(--blush); color: var(--blush); }
 
 /* ── NAVIGATION TABS ── */
 .nav-tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 1px solid var(--card-border); flex-wrap: wrap; }
-.nav-tab { background: none; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500; padding: 0.75rem 1.25rem; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
+.nav-tab { background: none; border: none; color: var(--muted); font-family: 'Work Sans', sans-serif; font-size: 0.95rem; font-weight: 500; padding: 0.75rem 1.25rem; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
 .nav-tab:hover { color: var(--lavender); }
 .nav-tab.active { color: var(--lavender); border-bottom-color: var(--lavender); }
 .nav-tab svg { width: 18px; height: 18px; }
@@ -367,11 +367,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--night); color: var(
 /* ── FORM SECTIONS ── */
 .section { margin-bottom: 2rem; }
 .section:last-child { margin-bottom: 0; }
-.section-label { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--lavender); margin-bottom: 0.75rem; display: block; letter-spacing: 0.3px; }
+.section-label { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; color: var(--lavender); margin-bottom: 0.75rem; display: block; letter-spacing: 0.3px; }
 .helper-text { font-size: 0.875rem; color: var(--muted); margin-bottom: 0.5rem; font-style: italic; }
 
 /* ── INPUTS ── */
-textarea, input[type="text"] { width: 100%; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 1rem; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 1rem; line-height: 1.6; resize: vertical; transition: border-color 0.3s ease; }
+textarea, input[type="text"] { width: 100%; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 1rem; color: var(--text); font-family: 'Work Sans', sans-serif; font-size: 1rem; line-height: 1.6; resize: vertical; transition: border-color 0.3s ease; }
 textarea { min-height: 100px; }
 textarea:focus, input:focus { outline: none; border-color: var(--lavender); }
 textarea::placeholder, input::placeholder { color: var(--muted); }
@@ -390,7 +390,7 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
 .evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
 @media (max-width: 600px) { .evidence-grid { grid-template-columns: 1fr; } }
 .evidence-box { background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; padding: 1.5rem; }
-.evidence-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 600; color: var(--blush); margin-bottom: 0.75rem; }
+.evidence-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; color: var(--blush); margin-bottom: 0.75rem; }
 .evidence-box.against .evidence-title { color: var(--gold); }
 
 /* ── DISTORTIONS ── */
@@ -417,7 +417,7 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
 
 /* ── ACTION BUTTONS ── */
 .actions { display: flex; gap: 1rem; margin-top: 2rem; justify-content: center; flex-wrap: wrap; }
-.btn { padding: 1rem 2rem; border-radius: 12px; border: none; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.5rem; }
+.btn { padding: 1rem 2rem; border-radius: 12px; border: none; font-family: 'Work Sans', sans-serif; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.5rem; }
 .btn-primary { background: linear-gradient(135deg, var(--lavender) 0%, var(--blush) 100%); color: var(--night); }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(201,184,232,0.3); }
 .btn-secondary { background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--card-border); }
@@ -570,14 +570,6 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
     <button class="nav-tab" onclick="switchTab('insights')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
       Insights
-    </button>
-    <button class="nav-tab" onclick="switchTab('examples')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      Examples
-    </button>
-    <button class="nav-tab" onclick="switchTab('toolkit')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-      Toolkit
     </button>
   </div>
 
@@ -775,38 +767,6 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
       <label class="section-label" style="margin-top: 2rem;">Common Patterns</label>
       <div class="helper-text">Distortions you identify most often</div>
       <div class="pattern-list" id="pattern-list"></div>
-    </div>
-  </div>
-
-  <!-- TAB: EXAMPLES -->
-  <div id="tab-examples" class="tab-content">
-    <div class="card">
-      <label class="section-label">Real Examples from Therapy</label>
-      <div class="helper-text">Click any example to use it as a starting point</div>
-      <div class="example-card" onclick="loadExample('alone-abroad')"><div class="example-thought">"I will be all alone abroad"</div><div class="example-response"><strong>Challenge:</strong> Is it a fact or a thought? → You can't know that. You might find people who will care.</div><span class="example-tag">Catastrophizing</span><span class="example-tag">Fortune Telling</span></div>
-      <div class="example-card" onclick="loadExample('weak')"><div class="example-thought">"I'm weak"</div><div class="example-response"><strong>Evidence Against:</strong> I reached out to my friend. I decided to go to therapy despite fear. I spoke up about homophobia to my professor. I got up for an exam after a panic attack.</div><span class="example-tag">Labeling</span><span class="example-tag">Discounting the Positive</span></div>
-      <div class="example-card" onclick="loadExample('unintelligent')"><div class="example-thought">"I'm unintelligent"</div><div class="example-response"><strong>Evidence Against:</strong> 200/200 English exam. B2-C1 English self-taught. Best at French in my group. Created research websites. 2+ years tutoring experience.</div><span class="example-tag">Labeling</span><span class="example-tag">All-or-Nothing</span></div>
-      <div class="example-card" onclick="loadExample('uliana-hates')"><div class="example-thought">"Uliana hates me"</div><div class="example-response"><strong>Evidence Against:</strong> She smiled at me. She helped with the exam when she had a fever. She said "I'm not mad at you."</div><span class="example-tag">Mind Reading</span><span class="example-tag">Catastrophizing</span></div>
-      <div class="example-card" onclick="loadExample('nothing-works')"><div class="example-thought">"No matter how much I try, nothing works"</div><div class="example-response"><strong>Evidence Against:</strong> I CAN challenge my thoughts now. I can use techniques: 54321, box breathing. I'm getting help with diagnosed disorders.</div><span class="example-tag">Overgeneralization</span><span class="example-tag">Discounting the Positive</span></div>
-      <div class="example-card" onclick="loadExample('problems-not-real')"><div class="example-thought">"My pain isn't real"</div><div class="example-response"><strong>Reality:</strong> I have two diagnosed anxiety disorders. 7-8 panic attacks in 5 months. Pain can't be measured or compared. If it's real to me, it IS real.</div><span class="example-tag">Discounting the Positive</span><span class="example-tag">Emotional Reasoning</span></div>
-      <div class="example-card" onclick="loadExample('nothing-matters')"><div class="example-thought">"Nothing I say matters"</div><div class="example-response"><strong>Alternative View:</strong> Your worth isn't tied to whether they responded. Silence stings, but the silence is theirs, not yours.</div><span class="example-tag">Personalization</span><span class="example-tag">All-or-Nothing</span></div>
-      <div class="example-card" onclick="loadExample('comparison')"><div class="example-thought">"Everyone is better than me"</div><div class="example-response"><strong>Reality:</strong> People are different — apples, oranges, peaches. Comparison is pointless when each of us is so different.</div><span class="example-tag">Overgeneralization</span><span class="example-tag">Discounting the Positive</span></div>
-    </div>
-  </div>
-
-  <!-- TAB: TOOLKIT -->
-  <div id="tab-toolkit" class="tab-content">
-    <div class="card">
-      <label class="section-label">Quick Interventions</label>
-      <div class="helper-text">Tools to use when feeling overwhelmed</div>
-      <div class="toolkit-grid">
-        <div class="toolkit-item"><div class="toolkit-title">54321 Grounding Technique</div><div class="toolkit-content"><ul class="toolkit-steps"><li>Name 5 things you can see</li><li>Name 4 things you can touch</li><li>Name 3 things you can hear</li><li>Name 2 things you can smell</li><li>Name 1 thing you can taste</li></ul><em style="color: var(--muted); font-size: 0.875rem;">Brings you back to the present moment</em></div></div>
-        <div class="toolkit-item"><div class="toolkit-title">Box Breathing</div><div class="toolkit-content"><ul class="toolkit-steps"><li>Breathe in for 4 counts</li><li>Hold for 4 counts</li><li>Breathe out for 4 counts</li><li>Hold for 4 counts</li><li>Repeat 4-5 times</li></ul><em style="color: var(--muted); font-size: 0.875rem;">Calms the nervous system</em></div></div>
-        <div class="toolkit-item"><div class="toolkit-title">Fact vs. Thought</div><div class="toolkit-content">Ask yourself: "Is this a fact or a thought?"<ul class="toolkit-steps"><li>Facts: Concrete, observable, provable</li><li>Thoughts: Interpretations, predictions, opinions</li><li>Most distressing things are thoughts, not facts</li></ul></div></div>
-        <div class="toolkit-item"><div class="toolkit-title">The Friend Test</div><div class="toolkit-content">If a friend told you this about themselves, what would you say?<ul class="toolkit-steps"><li>We're often kinder to friends than ourselves</li><li>This exposes double standards</li><li>Helps find compassionate perspective</li></ul></div></div>
-        <div class="toolkit-item"><div class="toolkit-title">Break It Down</div><div class="toolkit-content">When something feels too hard:<ul class="toolkit-steps"><li>Put on coat</li><li>Put on shoes</li><li>Go outside</li><li>Walk to the park</li><li>Listen to music</li></ul><em style="color: var(--muted); font-size: 0.875rem;">One tiny step at a time</em></div></div>
-        <div class="toolkit-item"><div class="toolkit-title">Pain Is Valid</div><div class="toolkit-content">Pain can't be measured or compared:<ul class="toolkit-steps"><li>If it's real to you, it IS real</li><li>Your problems don't take care away from anyone</li><li>You wouldn't tell someone with headaches to "shut up because others have cancer"</li></ul></div></div>
-      </div>
     </div>
   </div>
 </div>
