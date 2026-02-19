@@ -503,6 +503,90 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
   .record-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
   .nav-tabs { overflow-x: auto; }
 }
+
+/* ── ACTIVITY LOG ── */
+.al-category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.5rem; }
+@media (max-width: 600px) { .al-category-grid { grid-template-columns: 1fr; } }
+.al-cat-btn {
+  background: rgba(255,255,255,0.02); border: 1px solid var(--card-border);
+  border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.2s ease;
+  display: flex; flex-direction: column; gap: 0.25rem;
+}
+.al-cat-btn:hover { border-color: var(--lavender); background: rgba(201,184,232,0.05); }
+.al-cat-btn.active { background: rgba(201,184,232,0.12); border-color: var(--lavender); }
+.al-cat-icon { font-size: 1.3rem; }
+.al-cat-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; color: var(--lavender); }
+.al-cat-desc { font-size: 0.8rem; color: var(--muted); }
+
+.al-ratings { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 0.5rem; }
+.al-rating-row { display: flex; align-items: center; gap: 1rem; }
+.al-rating-label { min-width: 130px; display: flex; flex-direction: column; gap: 0.2rem; }
+.al-rating-hint { font-size: 0.75rem; color: var(--muted); }
+.al-rating-control { flex: 1; display: flex; align-items: center; gap: 0.75rem; }
+.al-range { flex: 1; }
+.al-rating-val { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: var(--lavender); min-width: 28px; text-align: right; }
+@media (max-width: 600px) { .al-rating-row { flex-direction: column; align-items: flex-start; } .al-rating-control { width: 100%; } }
+
+.al-entry-card {
+  background: rgba(255,255,255,0.02); border: 1px solid var(--card-border);
+  border-radius: 12px; padding: 1.25rem; margin-bottom: 0.75rem; transition: all 0.2s;
+}
+.al-entry-card:hover { border-color: rgba(201,184,232,0.3); }
+.al-entry-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; }
+.al-entry-activity { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; color: var(--text); font-style: italic; }
+.al-entry-meta { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+.al-cat-pill {
+  padding: 0.25rem 0.7rem; border-radius: 20px; font-size: 0.75rem; font-weight: 500;
+}
+.al-cat-pill.routine { background: rgba(201,184,232,0.15); color: var(--lavender); }
+.al-cat-pill.necessary { background: rgba(232,200,212,0.15); color: var(--blush); }
+.al-cat-pill.pleasure { background: rgba(212,169,106,0.15); color: var(--gold); }
+.al-cat-pill.achievement { background: rgba(110,231,183,0.15); color: #6ee7b7; }
+.al-entry-date { font-size: 0.78rem; color: var(--muted); }
+.al-bars { display: flex; gap: 1rem; flex-wrap: wrap; }
+.al-bar-group { display: flex; flex-direction: column; gap: 0.3rem; }
+.al-bar-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.al-bar-track { display: flex; gap: 2px; }
+.al-bar-seg { width: 8px; height: 12px; border-radius: 2px; }
+.al-bar-seg.filled-mood { background: var(--lavender); }
+.al-bar-seg.filled-pleasure { background: var(--blush); }
+.al-bar-seg.filled-mastery { background: var(--gold); }
+.al-bar-seg.filled-avoidance { background: #b0c4de; }
+.al-bar-seg.empty { background: rgba(255,255,255,0.06); }
+.al-entry-notes { font-size: 0.875rem; color: var(--muted); margin-top: 0.75rem; font-style: italic; padding-top: 0.75rem; border-top: 1px solid var(--card-border); }
+.al-delete-btn { background: none; border: none; color: var(--muted); cursor: pointer; padding: 0.25rem; border-radius: 6px; transition: color 0.2s; display: flex; align-items: center; }
+.al-delete-btn:hover { color: var(--blush); }
+.al-delete-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* ── AVOIDANCE AUDIT ── */
+.aa-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.5rem; }
+@media (max-width: 600px) { .aa-type-grid { grid-template-columns: 1fr; } }
+.aa-type-btn {
+  background: rgba(255,255,255,0.02); border: 1px solid var(--card-border);
+  border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.2s ease;
+  display: flex; flex-direction: column; gap: 0.3rem;
+}
+.aa-type-btn:hover { border-color: var(--blush); background: rgba(232,200,212,0.05); }
+.aa-type-btn.active { background: rgba(232,200,212,0.1); border-color: var(--blush); }
+.aa-type-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; color: var(--blush); }
+.aa-type-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+
+.aa-entry-card {
+  background: rgba(255,255,255,0.02); border: 1px solid var(--card-border);
+  border-radius: 12px; padding: 1.25rem; margin-bottom: 0.75rem; transition: all 0.2s;
+}
+.aa-entry-card:hover { border-color: rgba(232,200,212,0.3); }
+.aa-entry-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--card-border); }
+.aa-entry-avoided { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; color: var(--text); font-style: italic; flex: 1; margin-right: 0.75rem; }
+.aa-type-badge { padding: 0.25rem 0.7rem; border-radius: 20px; font-size: 0.75rem; font-weight: 500; background: rgba(232,200,212,0.15); color: var(--blush); flex-shrink: 0; }
+.aa-entry-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+.aa-entry-rowlabel { font-size: 0.8rem; color: var(--muted); min-width: 70px; font-style: italic; padding-top: 1px; }
+.aa-entry-rowval { font-size: 0.875rem; color: var(--text); line-height: 1.5; }
+.aa-entry-smallest { background: rgba(110,231,183,0.08); border: 1px solid rgba(110,231,183,0.2); border-radius: 8px; padding: 0.75rem; margin-top: 0.75rem; }
+.aa-entry-smallest-label { font-size: 0.75rem; color: #6ee7b7; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+.aa-entry-smallest-val { font-size: 0.9rem; color: var(--text); }
+.aa-anxiety-bar { display: flex; gap: 3px; margin-top: 0.5rem; }
+.aa-anxiety-seg { height: 8px; flex: 1; border-radius: 2px; }
 </style>
 </head>
 <body>
@@ -570,6 +654,14 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
     <button class="nav-tab" onclick="switchTab('insights')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
       Insights
+    </button>
+    <button class="nav-tab" onclick="switchTab('activity-log')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="8" y1="17" x2="8" y2="17"/></svg>
+      Activity Log
+    </button>
+    <button class="nav-tab" onclick="switchTab('avoidance-audit')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Avoidance Audit
     </button>
   </div>
 
@@ -769,6 +861,214 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
       <div class="pattern-list" id="pattern-list"></div>
     </div>
   </div>
+
+  <!-- TAB: ACTIVITY LOG -->
+  <div id="tab-activity-log" class="tab-content">
+    <div class="card">
+      <label class="section-label">Log an Activity</label>
+      <div class="helper-text">Track what you do and how it makes you feel. Patterns will reveal themselves over time.</div>
+
+      <div class="section" style="margin-top:1.5rem;">
+        <label class="section-label" style="font-size:1.1rem;">What did you do?</label>
+        <input type="text" id="al-activity" placeholder="Describe the activity...">
+      </div>
+
+      <div class="section">
+        <label class="section-label" style="font-size:1.1rem;">Category</label>
+        <div class="helper-text">What kind of activity was this?</div>
+        <div class="al-category-grid">
+          <div class="al-cat-btn active" data-cat="routine" onclick="selectCategory(this)">
+            <span class="al-cat-icon">🔄</span>
+            <span class="al-cat-name">Routine</span>
+            <span class="al-cat-desc">Hygiene, meals, commute</span>
+          </div>
+          <div class="al-cat-btn" data-cat="necessary" onclick="selectCategory(this)">
+            <span class="al-cat-icon">📋</span>
+            <span class="al-cat-name">Necessary</span>
+            <span class="al-cat-desc">Work, bills, appointments</span>
+          </div>
+          <div class="al-cat-btn" data-cat="pleasure" onclick="selectCategory(this)">
+            <span class="al-cat-icon">✨</span>
+            <span class="al-cat-name">Pleasure</span>
+            <span class="al-cat-desc">Hobbies, rest, enjoyment</span>
+          </div>
+          <div class="al-cat-btn" data-cat="achievement" onclick="selectCategory(this)">
+            <span class="al-cat-icon">🎯</span>
+            <span class="al-cat-name">Achievement</span>
+            <span class="al-cat-desc">Goals, growth, progress</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <label class="section-label" style="font-size:1.1rem;">Ratings</label>
+        <div class="helper-text">Rate each honestly. Neutral is valid data — not every activity needs to feel great.</div>
+        <div class="al-ratings">
+          <div class="al-rating-row">
+            <div class="al-rating-label">
+              <span style="color:var(--lavender);">Mood</span>
+              <span class="al-rating-hint">Overall feeling right now</span>
+            </div>
+            <div class="al-rating-control">
+              <input type="range" class="al-range" id="al-mood" min="1" max="10" value="5" oninput="document.getElementById('al-mood-val').textContent=this.value">
+              <span class="al-rating-val" id="al-mood-val">5</span>
+            </div>
+          </div>
+          <div class="al-rating-row">
+            <div class="al-rating-label">
+              <span style="color:var(--blush);">Pleasure</span>
+              <span class="al-rating-hint">Enjoyment during the activity</span>
+            </div>
+            <div class="al-rating-control">
+              <input type="range" class="al-range" id="al-pleasure" min="1" max="10" value="5" oninput="document.getElementById('al-pleasure-val').textContent=this.value">
+              <span class="al-rating-val" id="al-pleasure-val">5</span>
+            </div>
+          </div>
+          <div class="al-rating-row">
+            <div class="al-rating-label">
+              <span style="color:var(--gold);">Mastery</span>
+              <span class="al-rating-hint">Sense of accomplishment</span>
+            </div>
+            <div class="al-rating-control">
+              <input type="range" class="al-range" id="al-mastery" min="1" max="10" value="5" oninput="document.getElementById('al-mastery-val').textContent=this.value">
+              <span class="al-rating-val" id="al-mastery-val">5</span>
+            </div>
+          </div>
+          <div class="al-rating-row">
+            <div class="al-rating-label">
+              <span style="color:#b0c4de;">Avoidance</span>
+              <span class="al-rating-hint">Were you partly avoiding something else?</span>
+            </div>
+            <div class="al-rating-control">
+              <input type="range" class="al-range" id="al-avoidance" min="1" max="10" value="1" oninput="document.getElementById('al-avoidance-val').textContent=this.value">
+              <span class="al-rating-val" id="al-avoidance-val">1</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <label class="section-label" style="font-size:1.1rem;">Notes <span style="color:var(--muted);font-size:0.875rem;font-weight:300;">(optional)</span></label>
+        <textarea id="al-notes" placeholder="Any observations about this activity..." style="min-height:80px;"></textarea>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="saveActivityLog()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px;height:18px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          Save Entry
+        </button>
+        <button class="btn btn-secondary" onclick="clearActivityForm()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px;height:18px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Clear
+        </button>
+      </div>
+    </div>
+
+    <!-- Activity History -->
+    <div class="card" id="al-history-card" style="display:none;">
+      <label class="section-label">Activity History</label>
+      <div class="helper-text" style="margin-bottom:1.5rem;">Your data over time. Look for patterns — not single data points.</div>
+      <div class="stats-grid" style="margin-bottom:1.5rem;">
+        <div class="stat-card"><div class="stat-value" id="al-total">0</div><div class="stat-label">Total Entries</div></div>
+        <div class="stat-card"><div class="stat-value" id="al-avg-mood" style="color:var(--lavender);">-</div><div class="stat-label">Avg Mood</div></div>
+        <div class="stat-card"><div class="stat-value" id="al-top-cat" style="color:var(--gold);">-</div><div class="stat-label">Top Category</div></div>
+      </div>
+      <div class="chart-container" id="al-chart-container" style="height:220px; margin-bottom:1.5rem;"><canvas id="alMoodChart"></canvas></div>
+      <div id="al-entries-container"></div>
+    </div>
+  </div>
+
+  <!-- TAB: AVOIDANCE AUDIT -->
+  <div id="tab-avoidance-audit" class="tab-content">
+    <div class="card">
+      <label class="section-label">Log an Avoidance</label>
+      <div class="helper-text">No judgment here. Writing it down is the first act of approaching it.</div>
+
+      <div class="section" style="margin-top:1.5rem;">
+        <label class="section-label" style="font-size:1.1rem;">What did you avoid?</label>
+        <div class="helper-text">Be specific — not "work" but "replying to that email from my manager"</div>
+        <textarea id="aa-avoided" placeholder="What exactly did you avoid?" style="min-height:80px;"></textarea>
+      </div>
+
+      <div class="section">
+        <label class="section-label" style="font-size:1.1rem;">What triggered the avoidance?</label>
+        <div class="helper-text">What situation, thought, or feeling set it off?</div>
+        <textarea id="aa-trigger" placeholder="What happened just before you avoided?" style="min-height:80px;"></textarea>
+      </div>
+
+      <div class="section">
+        <label class="section-label" style="font-size:1.1rem;">How did you avoid it?</label>
+        <div class="helper-text">What did you do instead?</div>
+        <input type="text" id="aa-how" placeholder="e.g., scrolled phone, went to sleep, made tea...">
+      </div>
+
+      <div class="section">
+        <label class="section-label" style="font-size:1.1rem;">Avoidance Type</label>
+        <div class="helper-text">Knowing the type helps choose the right TRAC alternative</div>
+        <div class="aa-type-grid">
+          <div class="aa-type-btn active" data-type="behavioral" onclick="selectAvoidanceType(this)">
+            <span class="aa-type-name">Behavioral</span>
+            <span class="aa-type-desc">Left the situation, cancelled, didn't show up</span>
+          </div>
+          <div class="aa-type-btn" data-type="cognitive" onclick="selectAvoidanceType(this)">
+            <span class="aa-type-name">Cognitive</span>
+            <span class="aa-type-desc">Distracted yourself, suppressed thoughts, ruminated</span>
+          </div>
+          <div class="aa-type-btn" data-type="emotional" onclick="selectAvoidanceType(this)">
+            <span class="aa-type-name">Emotional</span>
+            <span class="aa-type-desc">Numbed out, used substances, dissociated</span>
+          </div>
+          <div class="aa-type-btn" data-type="social" onclick="selectAvoidanceType(this)">
+            <span class="aa-type-name">Social</span>
+            <span class="aa-type-desc">Withdrew from people, didn't reply, isolated</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <label class="section-label" style="font-size:1.1rem;">Anxiety before avoiding <span style="color:var(--muted); font-size:0.875rem;">(1–10)</span></label>
+        <div class="al-rating-control" style="max-width:400px;">
+          <input type="range" class="al-range" id="aa-anxiety" min="1" max="10" value="6" oninput="document.getElementById('aa-anxiety-val').textContent=this.value">
+          <span class="al-rating-val" id="aa-anxiety-val">6</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <label class="section-label" style="font-size:1.1rem;">What would the smallest version of this be?</label>
+        <div class="helper-text">If you could only do 5% of this thing, what would that look like?</div>
+        <input type="text" id="aa-smallest" placeholder="The smallest possible step toward it...">
+      </div>
+
+      <div class="section">
+        <label class="section-label" style="font-size:1.1rem;">Notes <span style="color:var(--muted);font-size:0.875rem;font-weight:300;">(optional)</span></label>
+        <textarea id="aa-notes" placeholder="Any other observations..." style="min-height:80px;"></textarea>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="saveAvoidanceLog()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px;height:18px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          Save Avoidance
+        </button>
+        <button class="btn btn-secondary" onclick="clearAvoidanceForm()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px;height:18px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Clear
+        </button>
+      </div>
+    </div>
+
+    <!-- Avoidance History -->
+    <div class="card" id="aa-history-card" style="display:none;">
+      <label class="section-label">Avoidance Audit</label>
+      <div class="helper-text" style="margin-bottom:1.5rem;">Patterns you've named. Seeing them clearly is how you start changing them.</div>
+      <div class="stats-grid" style="margin-bottom:1.5rem;">
+        <div class="stat-card"><div class="stat-value" id="aa-total">0</div><div class="stat-label">Total Logged</div></div>
+        <div class="stat-card"><div class="stat-value" id="aa-avg-anxiety" style="color:var(--blush);">-</div><div class="stat-label">Avg Anxiety</div></div>
+        <div class="stat-card"><div class="stat-value" id="aa-top-type" style="color:var(--gold);">-</div><div class="stat-label">Top Type</div></div>
+      </div>
+      <div id="aa-entries-container"></div>
+    </div>
+  </div>
+
 </div>
 </div>
 
@@ -1226,6 +1526,314 @@ function showMsg(text, isError) {
 // Enter key on auth inputs
 document.getElementById('login-password').addEventListener('keydown', e => { if(e.key==='Enter') handleLogin(); });
 document.getElementById('signup-password').addEventListener('keydown', e => { if(e.key==='Enter') handleSignup(); });
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ACTIVITY LOG
+// ══════════════════════════════════════════════════════════════════════════════
+let cachedActivityLogs = [];
+let alMoodChart = null;
+
+function selectCategory(el) {
+  document.querySelectorAll('.al-cat-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function getSelectedCategory() {
+  const btn = document.querySelector('.al-cat-btn.active');
+  return btn ? btn.dataset.cat : 'routine';
+}
+
+function clearActivityForm() {
+  document.getElementById('al-activity').value = '';
+  document.getElementById('al-notes').value = '';
+  ['al-mood','al-pleasure','al-mastery','al-avoidance'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.value = id === 'al-avoidance' ? 1 : 5; el.dispatchEvent(new Event('input')); }
+  });
+  document.querySelectorAll('.al-cat-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+}
+
+async function saveActivityLog() {
+  const activity = document.getElementById('al-activity').value.trim();
+  if (!activity) { showMsg('✗ Please describe the activity', true); return; }
+  const entry = {
+    id: Date.now(),
+    timestamp: new Date().toISOString(),
+    activity,
+    category: getSelectedCategory(),
+    mood: parseInt(document.getElementById('al-mood').value),
+    pleasure: parseInt(document.getElementById('al-pleasure').value),
+    mastery: parseInt(document.getElementById('al-mastery').value),
+    avoidance: parseInt(document.getElementById('al-avoidance').value),
+    notes: document.getElementById('al-notes').value.trim()
+  };
+  cachedActivityLogs.unshift(entry);
+  try {
+    await saveAllData();
+    showMsg('✓ Activity logged', false);
+    clearActivityForm();
+    renderActivityHistory();
+  } catch(e) {
+    cachedActivityLogs.shift();
+    showMsg('✗ Save failed', true);
+  }
+}
+
+async function deleteActivityLog(id) {
+  if (!confirm('Delete this entry?')) return;
+  const idx = cachedActivityLogs.findIndex(e => e.id === id);
+  if (idx === -1) return;
+  const removed = cachedActivityLogs.splice(idx, 1);
+  try {
+    await saveAllData();
+    renderActivityHistory();
+  } catch(e) {
+    cachedActivityLogs.splice(idx, 0, removed[0]);
+    showMsg('✗ Delete failed', true);
+  }
+}
+
+function renderActivityHistory() {
+  const card = document.getElementById('al-history-card');
+  if (cachedActivityLogs.length === 0) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+
+  // Stats
+  document.getElementById('al-total').textContent = cachedActivityLogs.length;
+  const avgMood = (cachedActivityLogs.reduce((s,e) => s + e.mood, 0) / cachedActivityLogs.length).toFixed(1);
+  document.getElementById('al-avg-mood').textContent = avgMood;
+  const catCounts = {};
+  cachedActivityLogs.forEach(e => { catCounts[e.category] = (catCounts[e.category]||0)+1; });
+  const topCat = Object.entries(catCounts).sort((a,b)=>b[1]-a[1])[0];
+  const catLabels = { routine:'Routine', necessary:'Necessary', pleasure:'Pleasure', achievement:'Achieve' };
+  document.getElementById('al-top-cat').textContent = topCat ? catLabels[topCat[0]] : '-';
+
+  // Chart — last 14 entries mood
+  const recent = [...cachedActivityLogs].reverse().slice(-14);
+  const ctx = document.getElementById('alMoodChart');
+  if (ctx) {
+    if (alMoodChart) alMoodChart.destroy();
+    alMoodChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: recent.map(e => new Date(e.timestamp).toLocaleDateString('en', {month:'short',day:'numeric'})),
+        datasets: [
+          { label: 'Mood', data: recent.map(e=>e.mood), borderColor: '#c9b8e8', backgroundColor: 'rgba(201,184,232,0.1)', tension: 0.4, fill: false },
+          { label: 'Pleasure', data: recent.map(e=>e.pleasure), borderColor: '#e8c8d4', backgroundColor: 'transparent', tension: 0.4, borderDash: [4,4] },
+          { label: 'Mastery', data: recent.map(e=>e.mastery), borderColor: '#d4a96a', backgroundColor: 'transparent', tension: 0.4, borderDash: [2,4] }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#e8e0f0', font: { size: 11 } } } },
+        scales: {
+          y: { min:1, max:10, ticks: { color:'#e8e0f0', stepSize:2 }, grid: { color:'rgba(255,255,255,0.06)' } },
+          x: { ticks: { color:'#e8e0f0', font:{size:10} }, grid: { color:'rgba(255,255,255,0.06)' } }
+        }
+      }
+    });
+  }
+
+  // Entries
+  const container = document.getElementById('al-entries-container');
+  if (cachedActivityLogs.length === 0) { container.innerHTML = '<div class="no-records">No entries yet</div>'; return; }
+  container.innerHTML = cachedActivityLogs.map(entry => {
+    const d = new Date(entry.timestamp);
+    const dateStr = d.toLocaleDateString('en', {weekday:'short', month:'short', day:'numeric'}) + ' · ' + d.toLocaleTimeString('en', {hour:'2-digit', minute:'2-digit'});
+    const bars = (vals, prefix, colors) => vals.map((v, i) => `
+      <div class="al-bar-group">
+        <div class="al-bar-label">${['Mood','Pleasure','Mastery','Avoid'][i]}</div>
+        <div class="al-bar-track">
+          ${Array.from({length:10}, (_,j) => `<div class="al-bar-seg ${j < v ? 'filled-'+['mood','pleasure','mastery','avoidance'][i] : 'empty'}"></div>`).join('')}
+        </div>
+      </div>`).join('');
+    return `<div class="al-entry-card">
+      <div class="al-entry-header">
+        <div class="al-entry-activity">${entry.activity}</div>
+        <div class="al-entry-meta">
+          <span class="al-cat-pill ${entry.category}">${entry.category}</span>
+          <button class="al-delete-btn" onclick="deleteActivityLog(${entry.id})"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
+        </div>
+      </div>
+      <div class="al-bars">${bars([entry.mood, entry.pleasure, entry.mastery, entry.avoidance])}</div>
+      <div class="al-entry-date" style="margin-top:0.5rem;">${dateStr}</div>
+      ${entry.notes ? `<div class="al-entry-notes">${entry.notes}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// AVOIDANCE AUDIT
+// ══════════════════════════════════════════════════════════════════════════════
+let cachedAvoidanceLogs = [];
+
+function selectAvoidanceType(el) {
+  document.querySelectorAll('.aa-type-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function getSelectedAvoidanceType() {
+  const btn = document.querySelector('.aa-type-btn.active');
+  return btn ? btn.dataset.type : 'behavioral';
+}
+
+function clearAvoidanceForm() {
+  ['aa-avoided','aa-trigger','aa-how','aa-smallest','aa-notes'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  const aaAnx = document.getElementById('aa-anxiety');
+  if (aaAnx) { aaAnx.value = 6; aaAnx.dispatchEvent(new Event('input')); }
+  document.querySelectorAll('.aa-type-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+}
+
+async function saveAvoidanceLog() {
+  const avoided = document.getElementById('aa-avoided').value.trim();
+  if (!avoided) { showMsg('✗ Please describe what you avoided', true); return; }
+  const entry = {
+    id: Date.now(),
+    timestamp: new Date().toISOString(),
+    avoided,
+    trigger: document.getElementById('aa-trigger').value.trim(),
+    how: document.getElementById('aa-how').value.trim(),
+    type: getSelectedAvoidanceType(),
+    anxiety: parseInt(document.getElementById('aa-anxiety').value),
+    smallest: document.getElementById('aa-smallest').value.trim(),
+    notes: document.getElementById('aa-notes').value.trim()
+  };
+  cachedAvoidanceLogs.unshift(entry);
+  try {
+    await saveAllData();
+    showMsg('✓ Avoidance logged', false);
+    clearAvoidanceForm();
+    renderAvoidanceHistory();
+  } catch(e) {
+    cachedAvoidanceLogs.shift();
+    showMsg('✗ Save failed', true);
+  }
+}
+
+async function deleteAvoidanceLog(id) {
+  if (!confirm('Delete this entry?')) return;
+  const idx = cachedAvoidanceLogs.findIndex(e => e.id === id);
+  if (idx === -1) return;
+  const removed = cachedAvoidanceLogs.splice(idx, 1);
+  try {
+    await saveAllData();
+    renderAvoidanceHistory();
+  } catch(e) {
+    cachedAvoidanceLogs.splice(idx, 0, removed[0]);
+    showMsg('✗ Delete failed', true);
+  }
+}
+
+function renderAvoidanceHistory() {
+  const card = document.getElementById('aa-history-card');
+  if (cachedAvoidanceLogs.length === 0) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+
+  document.getElementById('aa-total').textContent = cachedAvoidanceLogs.length;
+  const avgAnx = (cachedAvoidanceLogs.reduce((s,e)=>s+e.anxiety,0)/cachedAvoidanceLogs.length).toFixed(1);
+  document.getElementById('aa-avg-anxiety').textContent = avgAnx;
+  const typeCounts = {};
+  cachedAvoidanceLogs.forEach(e => { typeCounts[e.type] = (typeCounts[e.type]||0)+1; });
+  const topType = Object.entries(typeCounts).sort((a,b)=>b[1]-a[1])[0];
+  const typeLabels = { behavioral:'Behavioral', cognitive:'Cognitive', emotional:'Emotional', social:'Social' };
+  document.getElementById('aa-top-type').textContent = topType ? typeLabels[topType[0]] : '-';
+
+  const container = document.getElementById('aa-entries-container');
+  container.innerHTML = cachedAvoidanceLogs.map(entry => {
+    const d = new Date(entry.timestamp);
+    const dateStr = d.toLocaleDateString('en', {weekday:'short', month:'short', day:'numeric'}) + ' · ' + d.toLocaleTimeString('en', {hour:'2-digit', minute:'2-digit'});
+    const anxBar = Array.from({length:10}, (_,i) => {
+      const filled = i < entry.anxiety;
+      const color = filled ? (entry.anxiety >= 8 ? '#ff9bb3' : entry.anxiety >= 5 ? '#d4a96a' : '#6ee7b7') : 'rgba(255,255,255,0.06)';
+      return `<div class="aa-anxiety-seg" style="background:${color};"></div>`;
+    }).join('');
+    return `<div class="aa-entry-card">
+      <div class="aa-entry-header">
+        <div class="aa-entry-avoided">${entry.avoided}</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;">
+          <span class="aa-type-badge">${typeLabels[entry.type]||entry.type}</span>
+          <button class="al-delete-btn" onclick="deleteAvoidanceLog(${entry.id})"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
+        </div>
+      </div>
+      ${entry.trigger ? `<div class="aa-entry-row"><span class="aa-entry-rowlabel">Trigger:</span><span class="aa-entry-rowval">${entry.trigger}</span></div>` : ''}
+      ${entry.how ? `<div class="aa-entry-row"><span class="aa-entry-rowlabel">How:</span><span class="aa-entry-rowval">${entry.how}</span></div>` : ''}
+      <div style="margin-top:0.5rem;">
+        <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.3rem;">Anxiety: ${entry.anxiety}/10</div>
+        <div class="aa-anxiety-bar">${anxBar}</div>
+      </div>
+      ${entry.smallest ? `<div class="aa-entry-smallest"><div class="aa-entry-smallest-label">Smallest version →</div><div class="aa-entry-smallest-val">${entry.smallest}</div></div>` : ''}
+      <div class="al-entry-date" style="margin-top:0.75rem;">${dateStr}</div>
+      ${entry.notes ? `<div class="al-entry-notes">${entry.notes}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// UNIFIED CLOUD SAVE / LOAD (extends existing pattern)
+// ══════════════════════════════════════════════════════════════════════════════
+async function saveAllData() {
+  setSyncStatus('syncing');
+  try {
+    const uid = FirebaseREST.currentUser.uid;
+    await FirebaseREST.setDocument('thoughtRecords', uid, {
+      records_json: JSON.stringify(cachedRecords),
+      activity_logs_json: JSON.stringify(cachedActivityLogs),
+      avoidance_logs_json: JSON.stringify(cachedAvoidanceLogs),
+      updated_at: new Date().toISOString()
+    });
+    setSyncStatus('synced');
+  } catch(e) {
+    setSyncStatus('error');
+    showMsg('✗ ' + e.message, true);
+    throw e;
+  }
+}
+
+// Patch saveRecordsToCloud to also include new data
+const _origSaveRecords = saveRecordsToCloud;
+saveRecordsToCloud = async function() {
+  return saveAllData();
+};
+
+// Patch loadRecordsFromCloud to also load new data
+const _origLoad = loadRecordsFromCloud;
+loadRecordsFromCloud = async function() {
+  try {
+    setSyncStatus('syncing');
+    const uid = FirebaseREST.currentUser.uid;
+    const data = await FirebaseREST.getDocument('thoughtRecords', uid);
+    if (data) {
+      cachedRecords = data.recordsJson || data.records_json || data.recordsJSON
+        ? JSON.parse(data.recordsJson || data.records_json || data.recordsJSON) : [];
+      cachedActivityLogs = data.activityLogsJson || data.activity_logs_json
+        ? JSON.parse(data.activityLogsJson || data.activity_logs_json) : [];
+      cachedAvoidanceLogs = data.avoidanceLogsJson || data.avoidance_logs_json
+        ? JSON.parse(data.avoidanceLogsJson || data.avoidance_logs_json) : [];
+    } else {
+      cachedRecords = []; cachedActivityLogs = []; cachedAvoidanceLogs = [];
+    }
+    setSyncStatus('synced');
+    renderHistory();
+    renderInsights();
+    renderActivityHistory();
+    renderAvoidanceHistory();
+  } catch(e) {
+    console.error('Load failed:', e);
+    setSyncStatus('error');
+    cachedRecords = []; cachedActivityLogs = []; cachedAvoidanceLogs = [];
+  }
+};
+
+// Patch handleSignOut to clear new caches
+const _origSignOut = handleSignOut;
+handleSignOut = async function() {
+  await FirebaseREST.signOut();
+  cachedRecords = [];
+  cachedActivityLogs = [];
+  cachedAvoidanceLogs = [];
+};
 </script>
 
 </body>
