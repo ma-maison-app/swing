@@ -870,7 +870,12 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
 
       <div class="section" style="margin-top:1.5rem;">
         <label class="section-label" style="font-size:1.1rem;">What did you do?</label>
-        <input type="text" id="al-activity" placeholder="Describe the activity...">
+        <input type="text" id="al-activity" placeholder="e.g. went for a walk, replied to emails, called a friend...">
+      </div>
+
+      <div class="section">
+        <label class="section-label" style="font-size:1.1rem;">When?</label>
+        <input type="datetime-local" id="al-when" style="width:100%; background:rgba(255,255,255,0.02); border:1px solid var(--card-border); border-radius:12px; padding:0.85rem 1rem; color:var(--text); font-family:'Work Sans',sans-serif; font-size:1rem; transition:border-color 0.3s; cursor:pointer;" onfocus="this.style.borderColor='var(--lavender)'" onblur="this.style.borderColor='var(--card-border)'">
       </div>
 
       <div class="section">
@@ -901,55 +906,27 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
       </div>
 
       <div class="section">
-        <label class="section-label" style="font-size:1.1rem;">Ratings</label>
-        <div class="helper-text">Rate each honestly. Neutral is valid data — not every activity needs to feel great.</div>
-        <div class="al-ratings">
-          <div class="al-rating-row">
-            <div class="al-rating-label">
-              <span style="color:var(--lavender);">Mood</span>
-              <span class="al-rating-hint">Overall feeling right now</span>
-            </div>
-            <div class="al-rating-control">
-              <input type="range" class="al-range" id="al-mood" min="1" max="10" value="5" oninput="document.getElementById('al-mood-val').textContent=this.value">
-              <span class="al-rating-val" id="al-mood-val">5</span>
-            </div>
-          </div>
-          <div class="al-rating-row">
-            <div class="al-rating-label">
-              <span style="color:var(--blush);">Pleasure</span>
-              <span class="al-rating-hint">Enjoyment during the activity</span>
-            </div>
-            <div class="al-rating-control">
-              <input type="range" class="al-range" id="al-pleasure" min="1" max="10" value="5" oninput="document.getElementById('al-pleasure-val').textContent=this.value">
-              <span class="al-rating-val" id="al-pleasure-val">5</span>
-            </div>
-          </div>
-          <div class="al-rating-row">
-            <div class="al-rating-label">
-              <span style="color:var(--gold);">Mastery</span>
-              <span class="al-rating-hint">Sense of accomplishment</span>
-            </div>
-            <div class="al-rating-control">
-              <input type="range" class="al-range" id="al-mastery" min="1" max="10" value="5" oninput="document.getElementById('al-mastery-val').textContent=this.value">
-              <span class="al-rating-val" id="al-mastery-val">5</span>
-            </div>
-          </div>
-          <div class="al-rating-row">
-            <div class="al-rating-label">
-              <span style="color:#b0c4de;">Avoidance</span>
-              <span class="al-rating-hint">Were you partly avoiding something else?</span>
-            </div>
-            <div class="al-rating-control">
-              <input type="range" class="al-range" id="al-avoidance" min="1" max="10" value="1" oninput="document.getElementById('al-avoidance-val').textContent=this.value">
-              <span class="al-rating-val" id="al-avoidance-val">1</span>
-            </div>
-          </div>
+        <label class="section-label" style="font-size:1.1rem;">Mood before</label>
+        <div class="helper-text">How were you feeling before you did this?</div>
+        <div class="al-rating-control">
+          <input type="range" class="al-range" id="al-mood-before" min="1" max="10" value="5" oninput="document.getElementById('al-mood-before-val').textContent=this.value; updateMoodDelta()">
+          <span class="al-rating-val" id="al-mood-before-val">5</span>
         </div>
       </div>
 
       <div class="section">
+        <label class="section-label" style="font-size:1.1rem;">Mood after</label>
+        <div class="helper-text">How did you feel once it was done?</div>
+        <div class="al-rating-control">
+          <input type="range" class="al-range" id="al-mood-after" min="1" max="10" value="5" oninput="document.getElementById('al-mood-after-val').textContent=this.value; updateMoodDelta()">
+          <span class="al-rating-val" id="al-mood-after-val">5</span>
+        </div>
+        <div id="al-mood-delta" style="margin-top:0.75rem; font-size:0.9rem; color:var(--muted); font-style:italic; min-height:1.4em;"></div>
+      </div>
+
+      <div class="section">
         <label class="section-label" style="font-size:1.1rem;">Notes <span style="color:var(--muted);font-size:0.875rem;font-weight:300;">(optional)</span></label>
-        <textarea id="al-notes" placeholder="Any observations about this activity..." style="min-height:80px;"></textarea>
+        <textarea id="al-notes" placeholder="Anything worth noting..." style="min-height:80px;"></textarea>
       </div>
 
       <div class="actions">
@@ -970,7 +947,7 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
       <div class="helper-text" style="margin-bottom:1.5rem;">Your data over time. Look for patterns — not single data points.</div>
       <div class="stats-grid" style="margin-bottom:1.5rem;">
         <div class="stat-card"><div class="stat-value" id="al-total">0</div><div class="stat-label">Total Entries</div></div>
-        <div class="stat-card"><div class="stat-value" id="al-avg-mood" style="color:var(--lavender);">-</div><div class="stat-label">Avg Mood</div></div>
+        <div class="stat-card"><div class="stat-value" id="al-avg-mood" style="color:var(--lavender);">-</div><div class="stat-label">Avg Mood Δ</div></div>
         <div class="stat-card"><div class="stat-value" id="al-top-cat" style="color:var(--gold);">-</div><div class="stat-label">Top Category</div></div>
       </div>
       <div class="chart-container" id="al-chart-container" style="height:220px; margin-bottom:1.5rem;"><canvas id="alMoodChart"></canvas></div>
@@ -1205,6 +1182,16 @@ function switchTab(tabName) {
   event.target.closest('.nav-tab').classList.add('active');
   if (tabName === 'history') renderHistory();
   else if (tabName === 'insights') renderInsights();
+  else if (tabName === 'activity-log') {
+    const whenEl = document.getElementById('al-when');
+    if (whenEl && !whenEl.value) {
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      whenEl.value = now.toISOString().slice(0, 16);
+    }
+    renderActivityHistory();
+  }
+  else if (tabName === 'avoidance-audit') renderAvoidanceHistory();
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1533,6 +1520,16 @@ document.getElementById('signup-password').addEventListener('keydown', e => { if
 let cachedActivityLogs = [];
 let alMoodChart = null;
 
+function updateMoodDelta() {
+  const before = parseInt(document.getElementById('al-mood-before').value);
+  const after = parseInt(document.getElementById('al-mood-after').value);
+  const delta = after - before;
+  const el = document.getElementById('al-mood-delta');
+  if (delta > 0) el.innerHTML = `<span style="color:#6ee7b7;">↑ +${delta} mood improvement</span> — this activity helped.`;
+  else if (delta < 0) el.innerHTML = `<span style="color:#ff9bb3;">↓ ${delta} mood drop</span> — worth noting.`;
+  else el.innerHTML = `<span style="color:var(--muted);">→ No change</span> — neutral data is still useful.`;
+}
+
 function selectCategory(el) {
   document.querySelectorAll('.al-cat-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
@@ -1546,25 +1543,26 @@ function getSelectedCategory() {
 function clearActivityForm() {
   document.getElementById('al-activity').value = '';
   document.getElementById('al-notes').value = '';
-  ['al-mood','al-pleasure','al-mastery','al-avoidance'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) { el.value = id === 'al-avoidance' ? 1 : 5; el.dispatchEvent(new Event('input')); }
-  });
+  document.getElementById('al-when').value = '';
+  document.getElementById('al-mood-before').value = 5;
+  document.getElementById('al-mood-before-val').textContent = 5;
+  document.getElementById('al-mood-after').value = 5;
+  document.getElementById('al-mood-after-val').textContent = 5;
+  document.getElementById('al-mood-delta').innerHTML = '';
   document.querySelectorAll('.al-cat-btn').forEach((b,i) => b.classList.toggle('active', i===0));
 }
 
 async function saveActivityLog() {
   const activity = document.getElementById('al-activity').value.trim();
   if (!activity) { showMsg('✗ Please describe the activity', true); return; }
+  const whenVal = document.getElementById('al-when').value;
   const entry = {
     id: Date.now(),
-    timestamp: new Date().toISOString(),
+    timestamp: whenVal ? new Date(whenVal).toISOString() : new Date().toISOString(),
     activity,
     category: getSelectedCategory(),
-    mood: parseInt(document.getElementById('al-mood').value),
-    pleasure: parseInt(document.getElementById('al-pleasure').value),
-    mastery: parseInt(document.getElementById('al-mastery').value),
-    avoidance: parseInt(document.getElementById('al-avoidance').value),
+    moodBefore: parseInt(document.getElementById('al-mood-before').value),
+    moodAfter: parseInt(document.getElementById('al-mood-after').value),
     notes: document.getElementById('al-notes').value.trim()
   };
   cachedActivityLogs.unshift(entry);
@@ -1598,17 +1596,22 @@ function renderActivityHistory() {
   if (cachedActivityLogs.length === 0) { card.style.display = 'none'; return; }
   card.style.display = 'block';
 
-  // Stats
   document.getElementById('al-total').textContent = cachedActivityLogs.length;
-  const avgMood = (cachedActivityLogs.reduce((s,e) => s + e.mood, 0) / cachedActivityLogs.length).toFixed(1);
-  document.getElementById('al-avg-mood').textContent = avgMood;
+
+  // Avg mood delta
+  const deltas = cachedActivityLogs.map(e => (e.moodAfter || 5) - (e.moodBefore || 5));
+  const avgDelta = (deltas.reduce((s,d)=>s+d,0)/deltas.length);
+  const avgDeltaEl = document.getElementById('al-avg-mood');
+  avgDeltaEl.textContent = (avgDelta >= 0 ? '+' : '') + avgDelta.toFixed(1);
+  avgDeltaEl.style.color = avgDelta > 0 ? '#6ee7b7' : avgDelta < 0 ? '#ff9bb3' : 'var(--lavender)';
+
   const catCounts = {};
   cachedActivityLogs.forEach(e => { catCounts[e.category] = (catCounts[e.category]||0)+1; });
   const topCat = Object.entries(catCounts).sort((a,b)=>b[1]-a[1])[0];
   const catLabels = { routine:'Routine', necessary:'Necessary', pleasure:'Pleasure', achievement:'Achieve' };
   document.getElementById('al-top-cat').textContent = topCat ? catLabels[topCat[0]] : '-';
 
-  // Chart — last 14 entries mood
+  // Chart — before vs after mood
   const recent = [...cachedActivityLogs].reverse().slice(-14);
   const ctx = document.getElementById('alMoodChart');
   if (ctx) {
@@ -1616,11 +1619,13 @@ function renderActivityHistory() {
     alMoodChart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: recent.map(e => new Date(e.timestamp).toLocaleDateString('en', {month:'short',day:'numeric'})),
+        labels: recent.map(e => {
+          const d = new Date(e.timestamp);
+          return d.toLocaleDateString('en', {month:'short', day:'numeric'});
+        }),
         datasets: [
-          { label: 'Mood', data: recent.map(e=>e.mood), borderColor: '#c9b8e8', backgroundColor: 'rgba(201,184,232,0.1)', tension: 0.4, fill: false },
-          { label: 'Pleasure', data: recent.map(e=>e.pleasure), borderColor: '#e8c8d4', backgroundColor: 'transparent', tension: 0.4, borderDash: [4,4] },
-          { label: 'Mastery', data: recent.map(e=>e.mastery), borderColor: '#d4a96a', backgroundColor: 'transparent', tension: 0.4, borderDash: [2,4] }
+          { label: 'Before', data: recent.map(e => e.moodBefore || 5), borderColor: '#c9b8e8', backgroundColor: 'rgba(201,184,232,0.08)', tension: 0.4, fill: false },
+          { label: 'After', data: recent.map(e => e.moodAfter || 5), borderColor: '#6ee7b7', backgroundColor: 'rgba(110,231,183,0.08)', tension: 0.4, fill: false }
         ]
       },
       options: {
@@ -1636,17 +1641,19 @@ function renderActivityHistory() {
 
   // Entries
   const container = document.getElementById('al-entries-container');
-  if (cachedActivityLogs.length === 0) { container.innerHTML = '<div class="no-records">No entries yet</div>'; return; }
   container.innerHTML = cachedActivityLogs.map(entry => {
     const d = new Date(entry.timestamp);
-    const dateStr = d.toLocaleDateString('en', {weekday:'short', month:'short', day:'numeric'}) + ' · ' + d.toLocaleTimeString('en', {hour:'2-digit', minute:'2-digit'});
-    const bars = (vals, prefix, colors) => vals.map((v, i) => `
-      <div class="al-bar-group">
-        <div class="al-bar-label">${['Mood','Pleasure','Mastery','Avoid'][i]}</div>
-        <div class="al-bar-track">
-          ${Array.from({length:10}, (_,j) => `<div class="al-bar-seg ${j < v ? 'filled-'+['mood','pleasure','mastery','avoidance'][i] : 'empty'}"></div>`).join('')}
-        </div>
-      </div>`).join('');
+    const dateStr = d.toLocaleDateString('en', {weekday:'short', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
+    const before = entry.moodBefore || 5;
+    const after = entry.moodAfter || 5;
+    const delta = after - before;
+    const deltaColor = delta > 0 ? '#6ee7b7' : delta < 0 ? '#ff9bb3' : 'var(--muted)';
+    const deltaText = delta > 0 ? `↑ +${delta}` : delta < 0 ? `↓ ${delta}` : '→ 0';
+
+    const moodBar = (val, color) => Array.from({length:10}, (_,i) =>
+      `<div style="width:8px;height:12px;border-radius:2px;background:${i < val ? color : 'rgba(255,255,255,0.06)'};"></div>`
+    ).join('');
+
     return `<div class="al-entry-card">
       <div class="al-entry-header">
         <div class="al-entry-activity">${entry.activity}</div>
@@ -1655,8 +1662,20 @@ function renderActivityHistory() {
           <button class="al-delete-btn" onclick="deleteActivityLog(${entry.id})"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
         </div>
       </div>
-      <div class="al-bars">${bars([entry.mood, entry.pleasure, entry.mastery, entry.avoidance])}</div>
-      <div class="al-entry-date" style="margin-top:0.5rem;">${dateStr}</div>
+      <div style="display:flex; gap:1.5rem; align-items:center; flex-wrap:wrap;">
+        <div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;">Before</div>
+          <div style="display:flex;gap:2px;">${moodBar(before, '#c9b8e8')}</div>
+          <div style="font-size:0.8rem;color:var(--lavender);margin-top:2px;">${before}/10</div>
+        </div>
+        <div style="font-size:1.5rem;color:${deltaColor};font-weight:600;">${deltaText}</div>
+        <div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;">After</div>
+          <div style="display:flex;gap:2px;">${moodBar(after, '#6ee7b7')}</div>
+          <div style="font-size:0.8rem;color:#6ee7b7;margin-top:2px;">${after}/10</div>
+        </div>
+      </div>
+      <div class="al-entry-date" style="margin-top:0.6rem;">${dateStr}</div>
       ${entry.notes ? `<div class="al-entry-notes">${entry.notes}</div>` : ''}
     </div>`;
   }).join('');
@@ -1773,14 +1792,20 @@ function renderAvoidanceHistory() {
 // ══════════════════════════════════════════════════════════════════════════════
 // UNIFIED CLOUD SAVE / LOAD (extends existing pattern)
 // ══════════════════════════════════════════════════════════════════════════════
+// Pack all three arrays into the single existing records_json column
+// so no Supabase schema changes are needed
 async function saveAllData() {
   setSyncStatus('syncing');
   try {
     const uid = FirebaseREST.currentUser.uid;
+    const blob = JSON.stringify({
+      v: 2,
+      thoughtRecords: cachedRecords,
+      activityLogs: cachedActivityLogs,
+      avoidanceLogs: cachedAvoidanceLogs
+    });
     await FirebaseREST.setDocument('thoughtRecords', uid, {
-      records_json: JSON.stringify(cachedRecords),
-      activity_logs_json: JSON.stringify(cachedActivityLogs),
-      avoidance_logs_json: JSON.stringify(cachedAvoidanceLogs),
+      records_json: blob,
       updated_at: new Date().toISOString()
     });
     setSyncStatus('synced');
@@ -1791,26 +1816,35 @@ async function saveAllData() {
   }
 }
 
-// Patch saveRecordsToCloud to also include new data
-const _origSaveRecords = saveRecordsToCloud;
+// Override saveRecordsToCloud so thought records also go through saveAllData
 saveRecordsToCloud = async function() {
   return saveAllData();
 };
 
-// Patch loadRecordsFromCloud to also load new data
-const _origLoad = loadRecordsFromCloud;
+// Override loadRecordsFromCloud to unpack the blob or handle legacy format
 loadRecordsFromCloud = async function() {
   try {
     setSyncStatus('syncing');
     const uid = FirebaseREST.currentUser.uid;
     const data = await FirebaseREST.getDocument('thoughtRecords', uid);
     if (data) {
-      cachedRecords = data.recordsJson || data.records_json || data.recordsJSON
-        ? JSON.parse(data.recordsJson || data.records_json || data.recordsJSON) : [];
-      cachedActivityLogs = data.activityLogsJson || data.activity_logs_json
-        ? JSON.parse(data.activityLogsJson || data.activity_logs_json) : [];
-      cachedAvoidanceLogs = data.avoidanceLogsJson || data.avoidance_logs_json
-        ? JSON.parse(data.avoidanceLogsJson || data.avoidance_logs_json) : [];
+      const raw = data.recordsJson || data.records_json || data.recordsJSON;
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        // v2 format: packed blob
+        if (parsed && parsed.v === 2) {
+          cachedRecords = parsed.thoughtRecords || [];
+          cachedActivityLogs = parsed.activityLogs || [];
+          cachedAvoidanceLogs = parsed.avoidanceLogs || [];
+        } else {
+          // legacy: plain array of thought records
+          cachedRecords = Array.isArray(parsed) ? parsed : [];
+          cachedActivityLogs = [];
+          cachedAvoidanceLogs = [];
+        }
+      } else {
+        cachedRecords = []; cachedActivityLogs = []; cachedAvoidanceLogs = [];
+      }
     } else {
       cachedRecords = []; cachedActivityLogs = []; cachedAvoidanceLogs = [];
     }
@@ -1826,8 +1860,6 @@ loadRecordsFromCloud = async function() {
   }
 };
 
-// Patch handleSignOut to clear new caches
-const _origSignOut = handleSignOut;
 handleSignOut = async function() {
   await FirebaseREST.signOut();
   cachedRecords = [];
