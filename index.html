@@ -663,6 +663,10 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       Avoidance Audit
     </button>
+    <button class="nav-tab" onclick="switchTab('wins-log')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Wins
+    </button>
   </div>
 
   <!-- TAB: NEW RECORD -->
@@ -808,6 +812,12 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
       </div>
 
       <div class="section">
+        <label class="section-label">What Would a Stranger Think?</label>
+        <div class="helper-text">If a neutral observer — someone who doesn't know you — saw this situation, what would they objectively conclude? Not a friend, not an enemy. Just a fair stranger.</div>
+        <textarea id="stranger-response" placeholder="A neutral observer would probably think..."></textarea>
+      </div>
+
+      <div class="section">
         <label class="section-label">If a Friend Said This...</label>
         <div class="helper-text">What would you tell a friend in this situation?</div>
         <textarea id="friend-response" placeholder="How would you respond with compassion?"></textarea>
@@ -819,6 +829,16 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
         <div class="conclusion-box">
           <textarea id="conclusion" placeholder="A more compassionate, realistic perspective..."></textarea>
         </div>
+      </div>
+
+      <div class="section">
+        <label class="section-label">Emotion Intensity <span style="color:var(--muted);font-size:0.875rem;font-weight:300;">after reflection</span></label>
+        <div class="helper-text">How intense does the emotion feel now, after completing this record?</div>
+        <div style="display:flex;align-items:center;gap:1rem;">
+          <input type="range" id="intensity-after" min="1" max="10" value="5" step="1" style="flex:1;">
+          <div class="intensity-value" id="intensity-after-value">5</div>
+        </div>
+        <div id="intensity-shift-msg" style="font-size:0.85rem;color:var(--muted);font-style:italic;margin-top:0.5rem;min-height:1.2em;"></div>
       </div>
 
       <div class="actions">
@@ -841,7 +861,26 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
   <!-- TAB: HISTORY -->
   <div id="tab-history" class="tab-content">
     <div class="card">
-      <label class="section-label">Past Records</label>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;margin-bottom:1.25rem;">
+        <label class="section-label" style="margin:0;">Past Records</label>
+        <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+          <button class="icon-btn" id="select-all-btn" onclick="toggleSelectAll()" style="font-size:0.82rem;padding:0.4rem 0.85rem;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;"><rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="9 12 11 14 15 10"/></svg>
+            Select All
+          </button>
+          <div id="bulk-pdf-bar" style="display:none;align-items:center;gap:0.6rem;">
+            <span id="selected-count" style="font-size:0.82rem;color:var(--lavender);font-weight:500;"></span>
+            <button class="btn btn-primary" onclick="downloadSelectedPDF()" style="padding:0.45rem 1rem;font-size:0.85rem;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:15px;height:15px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download PDF
+            </button>
+            <button class="icon-btn" onclick="clearSelection()" style="font-size:0.82rem;padding:0.4rem 0.7rem;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
       <div id="records-container"></div>
     </div>
   </div>
@@ -1046,10 +1085,64 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
     </div>
   </div>
 
-</div>
-</div>
+  <!-- TAB: WINS LOG -->
+  <div id="tab-wins-log" class="tab-content">
+    <div class="card">
+      <label class="section-label">Log a Win</label>
+      <div class="helper-text">Small or large. Handled something hard, noticed a distortion, spoke up, got out of bed on a bad day. All of it counts.</div>
 
-<div class="saved-msg" id="saved-msg">✓ Record saved</div>
+      <div class="section" style="margin-top:1.5rem;">
+        <label class="section-label" style="font-size:1.1rem;">What happened?</label>
+        <textarea id="win-description" placeholder="Describe the win... be specific." style="min-height:90px;"></textarea>
+      </div>
+
+      <div class="section">
+        <label class="section-label" style="font-size:1.1rem;">Category</label>
+        <div class="aa-type-grid">
+          <div class="win-cat-btn active" data-cat="coping" onclick="selectWinCategory(this)" style="background:rgba(255,255,255,0.02);border:1px solid var(--card-border);border-radius:12px;padding:1rem;cursor:pointer;transition:all 0.2s ease;display:flex;flex-direction:column;gap:0.3rem;">
+            <span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--lavender);">Coping</span>
+            <span style="font-size:0.8rem;color:var(--muted);line-height:1.4;">Managed anxiety, used a technique, stayed calm</span>
+          </div>
+          <div class="win-cat-btn" data-cat="social" onclick="selectWinCategory(this)" style="background:rgba(255,255,255,0.02);border:1px solid var(--card-border);border-radius:12px;padding:1rem;cursor:pointer;transition:all 0.2s ease;display:flex;flex-direction:column;gap:0.3rem;">
+            <span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--blush);">Social</span>
+            <span style="font-size:0.8rem;color:var(--muted);line-height:1.4;">Spoke up, reached out, set a boundary</span>
+          </div>
+          <div class="win-cat-btn" data-cat="task" onclick="selectWinCategory(this)" style="background:rgba(255,255,255,0.02);border:1px solid var(--card-border);border-radius:12px;padding:1rem;cursor:pointer;transition:all 0.2s ease;display:flex;flex-direction:column;gap:0.3rem;">
+            <span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--gold);">Task</span>
+            <span style="font-size:0.8rem;color:var(--muted);line-height:1.4;">Did something hard, showed up, followed through</span>
+          </div>
+          <div class="win-cat-btn" data-cat="self-awareness" onclick="selectWinCategory(this)" style="background:rgba(255,255,255,0.02);border:1px solid var(--card-border);border-radius:12px;padding:1rem;cursor:pointer;transition:all 0.2s ease;display:flex;flex-direction:column;gap:0.3rem;">
+            <span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:#6ee7b7;">Self-awareness</span>
+            <span style="font-size:0.8rem;color:var(--muted);line-height:1.4;">Noticed a pattern, caught a distortion, reflected</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="saveWin()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px;height:18px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Save Win
+        </button>
+        <button class="btn btn-secondary" onclick="clearWinForm()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px;height:18px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Clear
+        </button>
+      </div>
+    </div>
+
+    <div class="card" id="wins-history-card" style="display:none;">
+      <label class="section-label">Your Wins</label>
+      <div class="helper-text" style="margin-bottom:1.5rem;">Evidence that you are more capable than you think. Read these on hard days.</div>
+      <div class="stats-grid" style="margin-bottom:1.5rem;">
+        <div class="stat-card"><div class="stat-value" id="wins-total">0</div><div class="stat-label">Total Wins</div></div>
+        <div class="stat-card"><div class="stat-value" id="wins-this-week" style="color:var(--lavender);">0</div><div class="stat-label">This Week</div></div>
+        <div class="stat-card"><div class="stat-value" id="wins-top-cat" style="color:var(--gold);">-</div><div class="stat-label">Top Category</div></div>
+      </div>
+      <div id="wins-entries-container"></div>
+    </div>
+  </div>
+
+
 
 <script>
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1192,6 +1285,7 @@ function switchTab(tabName) {
     renderActivityHistory();
   }
   else if (tabName === 'avoidance-audit') renderAvoidanceHistory();
+  else if (tabName === 'wins-log') renderWins();
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1199,7 +1293,24 @@ function switchTab(tabName) {
 // ══════════════════════════════════════════════════════════════════════════════
 document.getElementById('intensity').addEventListener('input', (e) => {
   document.getElementById('intensity-value').textContent = e.target.value;
+  updateIntensityShift();
 });
+
+document.getElementById('intensity-after').addEventListener('input', (e) => {
+  document.getElementById('intensity-after-value').textContent = e.target.value;
+  updateIntensityShift();
+});
+
+function updateIntensityShift() {
+  const before = parseInt(document.getElementById('intensity').value);
+  const after = parseInt(document.getElementById('intensity-after').value);
+  const delta = after - before;
+  const el = document.getElementById('intensity-shift-msg');
+  if (!el) return;
+  if (delta < 0) el.innerHTML = `<span style="color:#6ee7b7;">↓ ${delta} — the reflection helped.</span>`;
+  else if (delta > 0) el.innerHTML = `<span style="color:#ff9bb3;">↑ +${delta} — still processing. That's okay.</span>`;
+  else el.innerHTML = `<span style="color:var(--muted);">→ No change in intensity yet.</span>`;
+}
 
 // ══════════════════════════════════════════════════════════════════════════════
 // COGNITIVE DISTORTIONS TOGGLE
@@ -1278,8 +1389,10 @@ async function saveRecord() {
     evidenceFor: document.getElementById('evidence-for').value,
     evidenceAgainst: document.getElementById('evidence-against').value,
     distortions: Array.from(document.querySelectorAll('.distortion-tag.selected')).map(el => el.textContent),
+    strangerResponse: document.getElementById('stranger-response').value,
     friendResponse: document.getElementById('friend-response').value,
-    conclusion: document.getElementById('conclusion').value
+    conclusion: document.getElementById('conclusion').value,
+    intensityAfter: document.getElementById('intensity-after').value
   };
 
   cachedRecords.push(record);
@@ -1305,8 +1418,10 @@ function downloadCurrentPDF() {
     evidenceFor: document.getElementById('evidence-for').value,
     evidenceAgainst: document.getElementById('evidence-against').value,
     distortions: Array.from(document.querySelectorAll('.distortion-tag.selected')).map(el => el.textContent),
+    strangerResponse: document.getElementById('stranger-response').value,
     friendResponse: document.getElementById('friend-response').value,
-    conclusion: document.getElementById('conclusion').value
+    conclusion: document.getElementById('conclusion').value,
+    intensityAfter: document.getElementById('intensity-after').value
   };
   generatePDF(record, new Date());
 }
@@ -1328,11 +1443,12 @@ function generatePDF(record, date) {
     else { doc.setTextColor(150,150,150); doc.text('(not filled)', margin, y); y += 12; }
   };
   addSection('Situation', record.situation);
-  addSection('Emotions', record.emotions ? `${record.emotions} (${record.intensity}/10)` : '');
+  addSection('Emotions', record.emotions ? `${record.emotions} (${record.intensity}/10 before → ${record.intensityAfter || '?'}/10 after)` : '');
   addSection('Automatic Thoughts', record.thoughts);
   addSection('Evidence For', record.evidenceFor);
   addSection('Evidence Against', record.evidenceAgainst);
   addSection('Cognitive Distortions', record.distortions ? record.distortions.join(', ') : '');
+  addSection('What Would a Stranger Think?', record.strangerResponse);
   addSection('If a Friend Said This...', record.friendResponse);
   addSection('Balanced Conclusion', record.conclusion);
   doc.save(`thought-record-${new Date(date).toISOString().split('T')[0]}.pdf`);
@@ -1341,6 +1457,141 @@ function generatePDF(record, date) {
 // ══════════════════════════════════════════════════════════════════════════════
 // RENDER HISTORY
 // ══════════════════════════════════════════════════════════════════════════════
+let selectedRecordIndices = new Set();
+
+function updateBulkBar() {
+  const bar = document.getElementById('bulk-pdf-bar');
+  const countEl = document.getElementById('selected-count');
+  if (selectedRecordIndices.size > 0) {
+    bar.style.display = 'flex';
+    countEl.textContent = `${selectedRecordIndices.size} selected`;
+  } else {
+    bar.style.display = 'none';
+  }
+}
+
+function toggleRecordSelect(realIndex) {
+  if (selectedRecordIndices.has(realIndex)) {
+    selectedRecordIndices.delete(realIndex);
+  } else {
+    selectedRecordIndices.add(realIndex);
+  }
+  const card = document.getElementById(`record-${realIndex}`);
+  const cb = document.getElementById(`cb-${realIndex}`);
+  if (card && cb) {
+    cb.checked = selectedRecordIndices.has(realIndex);
+    card.style.borderColor = selectedRecordIndices.has(realIndex) ? 'var(--lavender)' : 'var(--card-border)';
+    card.style.background = selectedRecordIndices.has(realIndex) ? 'rgba(201,184,232,0.06)' : 'rgba(255,255,255,0.02)';
+  }
+  updateBulkBar();
+}
+
+function toggleSelectAll() {
+  const sorted = [...cachedRecords].map((_, i) => i);
+  if (selectedRecordIndices.size === cachedRecords.length) {
+    clearSelection();
+  } else {
+    sorted.forEach(i => selectedRecordIndices.add(i));
+    sorted.forEach(i => {
+      const card = document.getElementById(`record-${i}`);
+      const cb = document.getElementById(`cb-${i}`);
+      if (card && cb) {
+        cb.checked = true;
+        card.style.borderColor = 'var(--lavender)';
+        card.style.background = 'rgba(201,184,232,0.06)';
+      }
+    });
+    updateBulkBar();
+  }
+}
+
+function clearSelection() {
+  selectedRecordIndices.forEach(i => {
+    const card = document.getElementById(`record-${i}`);
+    const cb = document.getElementById(`cb-${i}`);
+    if (card && cb) {
+      cb.checked = false;
+      card.style.borderColor = 'var(--card-border)';
+      card.style.background = 'rgba(255,255,255,0.02)';
+    }
+  });
+  selectedRecordIndices.clear();
+  updateBulkBar();
+}
+
+function downloadSelectedPDF() {
+  const indices = Array.from(selectedRecordIndices).sort((a, b) => a - b);
+  if (indices.length === 0) return;
+  const records = indices.map(i => ({ record: cachedRecords[i], date: cachedRecords[i].timestamp }));
+  generateBulkPDF(records);
+}
+
+function generateBulkPDF(items) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 20;
+  const maxWidth = pageWidth - 2 * margin;
+
+  items.forEach((item, itemIdx) => {
+    if (itemIdx > 0) doc.addPage();
+    const record = item.record;
+    let y = 20;
+
+    // Header
+    doc.setFontSize(18); doc.setTextColor(106, 90, 205);
+    doc.text('Thought Record', margin, y); y += 9;
+    doc.setFontSize(9); doc.setTextColor(150, 150, 150);
+    doc.text(new Date(item.date).toLocaleString(), margin, y); y += 5;
+    // Divider
+    doc.setDrawColor(201, 184, 232); doc.setLineWidth(0.3);
+    doc.line(margin, y, pageWidth - margin, y); y += 10;
+
+    const addSection = (label, content) => {
+      if (y > pageHeight - 25) { doc.addPage(); y = 20; }
+      doc.setFontSize(10); doc.setTextColor(106, 90, 205); doc.setFont(undefined, 'bold');
+      doc.text(label, margin, y); y += 6;
+      doc.setFont(undefined, 'normal');
+      if (content && content.trim()) {
+        doc.setFontSize(9.5); doc.setTextColor(40, 40, 40);
+        const lines = doc.splitTextToSize(content, maxWidth);
+        lines.forEach(line => {
+          if (y > pageHeight - 15) { doc.addPage(); y = 20; }
+          doc.text(line, margin, y); y += 5;
+        });
+        y += 6;
+      } else {
+        doc.setFontSize(9); doc.setTextColor(160, 160, 160);
+        doc.text('(not filled)', margin, y); y += 10;
+      }
+    };
+
+    addSection('Situation', record.situation);
+    if (record.emotions) {
+      const emoLine = `${record.emotions}  ·  ${record.intensity}/10 before${record.intensityAfter ? ' → ' + record.intensityAfter + '/10 after' : ''}`;
+      addSection('Emotions', emoLine);
+    }
+    addSection('Automatic Thoughts', record.thoughts);
+    addSection('Evidence For', record.evidenceFor);
+    addSection('Evidence Against', record.evidenceAgainst);
+    if (record.distortions && record.distortions.length > 0) {
+      addSection('Cognitive Distortions', record.distortions.join(', '));
+    }
+    if (record.strangerResponse) addSection('What Would a Stranger Think?', record.strangerResponse);
+    addSection('If a Friend Said This...', record.friendResponse);
+    addSection('Balanced Conclusion', record.conclusion);
+
+    // Page number
+    doc.setFontSize(8); doc.setTextColor(180, 180, 180);
+    doc.text(`${itemIdx + 1} / ${items.length}`, pageWidth - margin, pageHeight - 8, { align: 'right' });
+  });
+
+  const dateStr = new Date().toISOString().split('T')[0];
+  doc.save(`thought-records-${items.length}-entries-${dateStr}.pdf`);
+  showMsg(`✓ Downloaded ${items.length} record${items.length > 1 ? 's' : ''}`, false);
+}
+
 function renderHistory() {
   const container = document.getElementById('records-container');
   if (cachedRecords.length === 0) { container.innerHTML = '<div class="no-records">No records yet. Save your first thought record!</div>'; return; }
@@ -1349,10 +1600,17 @@ function renderHistory() {
     const realIndex = cachedRecords.length - 1 - i;
     const d = new Date(record.timestamp);
     const dateStr = d.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' }) + ' · ' + d.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+    const isSelected = selectedRecordIndices.has(realIndex);
     return `
-      <div class="record-card" id="record-${realIndex}">
+      <div class="record-card" id="record-${realIndex}" style="cursor:default;border-color:${isSelected ? 'var(--lavender)' : 'var(--card-border)'};background:${isSelected ? 'rgba(201,184,232,0.06)' : 'rgba(255,255,255,0.02)'};">
         <div class="record-header">
-          <div class="record-date">${dateStr}</div>
+          <div style="display:flex;align-items:center;gap:0.75rem;flex:1;min-width:0;">
+            <label style="display:flex;align-items:center;cursor:pointer;flex-shrink:0;" title="Select for bulk PDF" onclick="event.stopPropagation()">
+              <input type="checkbox" id="cb-${realIndex}" ${isSelected ? 'checked' : ''} onchange="toggleRecordSelect(${realIndex})"
+                style="width:16px;height:16px;accent-color:var(--lavender);cursor:pointer;flex-shrink:0;">
+            </label>
+            <div class="record-date" style="flex:1;min-width:0;">${dateStr}</div>
+          </div>
           <div class="record-actions">
             <button class="icon-btn" onclick="editRecord(${realIndex})"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit</button>
             <button class="icon-btn" onclick="downloadRecordPDF(${realIndex})"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>PDF</button>
@@ -1374,6 +1632,7 @@ function renderHistory() {
           <textarea id="edit-thoughts-${realIndex}" placeholder="Automatic Thoughts">${record.thoughts || ''}</textarea>
           <textarea id="edit-evidence-for-${realIndex}" placeholder="Evidence For">${record.evidenceFor || ''}</textarea>
           <textarea id="edit-evidence-against-${realIndex}" placeholder="Evidence Against">${record.evidenceAgainst || ''}</textarea>
+          <textarea id="edit-stranger-response-${realIndex}" placeholder="What would a stranger think?">${record.strangerResponse || ''}</textarea>
           <textarea id="edit-friend-response-${realIndex}" placeholder="If a Friend Said This...">${record.friendResponse || ''}</textarea>
           <textarea id="edit-conclusion-${realIndex}" placeholder="Balanced Conclusion">${record.conclusion || ''}</textarea>
           <div style="margin-bottom:0.75rem;">
@@ -1415,6 +1674,7 @@ async function saveEdit(index) {
     thoughts: document.getElementById(`edit-thoughts-${index}`).value,
     evidenceFor: document.getElementById(`edit-evidence-for-${index}`).value,
     evidenceAgainst: document.getElementById(`edit-evidence-against-${index}`).value,
+    strangerResponse: document.getElementById(`edit-stranger-response-${index}`).value,
     friendResponse: document.getElementById(`edit-friend-response-${index}`).value,
     conclusion: document.getElementById(`edit-conclusion-${index}`).value,
     distortions: Array.from(document.querySelectorAll(`#edit-distortions-${index} .distortion-tag.selected`)).map(el => el.textContent)
@@ -1493,9 +1753,13 @@ function renderPatterns() {
 // CLEAR FORM
 // ══════════════════════════════════════════════════════════════════════════════
 function clearForm() {
-  ['situation','emotions','thoughts','evidence-for','evidence-against','friend-response','conclusion'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  ['situation','emotions','thoughts','evidence-for','evidence-against','stranger-response','friend-response','conclusion'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
   document.getElementById('intensity').value = 5;
   document.getElementById('intensity-value').textContent = 5;
+  document.getElementById('intensity-after').value = 5;
+  document.getElementById('intensity-after-value').textContent = 5;
+  const shiftMsg = document.getElementById('intensity-shift-msg');
+  if (shiftMsg) shiftMsg.innerHTML = '';
   document.querySelectorAll('.distortion-tag.selected').forEach(t => t.classList.remove('selected'));
 }
 
@@ -1682,8 +1946,107 @@ function renderActivityHistory() {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// AVOIDANCE AUDIT
+// WINS LOG
 // ══════════════════════════════════════════════════════════════════════════════
+let cachedWins = [];
+
+function selectWinCategory(el) {
+  document.querySelectorAll('.win-cat-btn').forEach(b => {
+    b.style.background = 'rgba(255,255,255,0.02)';
+    b.style.borderColor = 'var(--card-border)';
+  });
+  el.style.background = 'rgba(201,184,232,0.1)';
+  el.style.borderColor = 'var(--lavender)';
+}
+
+function getSelectedWinCategory() {
+  const btns = document.querySelectorAll('.win-cat-btn');
+  for (const b of btns) {
+    if (b.style.background.includes('0.1')) return b.dataset.cat;
+  }
+  return 'coping';
+}
+
+function clearWinForm() {
+  const desc = document.getElementById('win-description');
+  if (desc) desc.value = '';
+  document.querySelectorAll('.win-cat-btn').forEach((b, i) => {
+    b.style.background = 'rgba(255,255,255,0.02)';
+    b.style.borderColor = 'var(--card-border)';
+    if (i === 0) { b.style.background = 'rgba(201,184,232,0.1)'; b.style.borderColor = 'var(--lavender)'; }
+  });
+}
+
+async function saveWin() {
+  const desc = document.getElementById('win-description').value.trim();
+  if (!desc) { showMsg('✗ Please describe the win', true); return; }
+  const entry = {
+    id: Date.now(),
+    timestamp: new Date().toISOString(),
+    description: desc,
+    category: getSelectedWinCategory()
+  };
+  cachedWins.unshift(entry);
+  try {
+    await saveAllData();
+    showMsg('✓ Win saved ★', false);
+    clearWinForm();
+    renderWins();
+  } catch(e) {
+    cachedWins.shift();
+    showMsg('✗ Save failed', true);
+  }
+}
+
+async function deleteWin(id) {
+  if (!confirm('Delete this win?')) return;
+  const idx = cachedWins.findIndex(e => e.id === id);
+  if (idx === -1) return;
+  const removed = cachedWins.splice(idx, 1);
+  try {
+    await saveAllData();
+    renderWins();
+  } catch(e) {
+    cachedWins.splice(idx, 0, removed[0]);
+    showMsg('✗ Delete failed', true);
+  }
+}
+
+function renderWins() {
+  const card = document.getElementById('wins-history-card');
+  if (cachedWins.length === 0) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+
+  document.getElementById('wins-total').textContent = cachedWins.length;
+  const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
+  document.getElementById('wins-this-week').textContent = cachedWins.filter(w => new Date(w.timestamp) > weekAgo).length;
+  const catCounts = {};
+  cachedWins.forEach(w => { catCounts[w.category] = (catCounts[w.category]||0)+1; });
+  const topCat = Object.entries(catCounts).sort((a,b)=>b[1]-a[1])[0];
+  const catLabels = { coping:'Coping', social:'Social', task:'Task', 'self-awareness':'Awareness' };
+  document.getElementById('wins-top-cat').textContent = topCat ? catLabels[topCat[0]] : '-';
+
+  const catColors = { coping: 'var(--lavender)', social: 'var(--blush)', task: 'var(--gold)', 'self-awareness': '#6ee7b7' };
+
+  const container = document.getElementById('wins-entries-container');
+  container.innerHTML = cachedWins.map(entry => {
+    const d = new Date(entry.timestamp);
+    const dateStr = d.toLocaleDateString('en', {weekday:'short', month:'short', day:'numeric'}) + ' · ' + d.toLocaleTimeString('en', {hour:'2-digit', minute:'2-digit'});
+    const color = catColors[entry.category] || 'var(--lavender)';
+    return `<div style="background:rgba(255,255,255,0.02);border:1px solid var(--card-border);border-left:3px solid ${color};border-radius:12px;padding:1.25rem;margin-bottom:0.75rem;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(201,184,232,0.3)'" onmouseout="this.style.borderColor='var(--card-border)'">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--text);line-height:1.5;flex:1;">${entry.description}</div>
+        <div style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0;">
+          <span style="padding:0.25rem 0.7rem;border-radius:20px;font-size:0.75rem;font-weight:500;background:rgba(255,255,255,0.06);color:${color};">${catLabels[entry.category]||entry.category}</span>
+          <button class="al-delete-btn" onclick="deleteWin(${entry.id})"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
+        </div>
+      </div>
+      <div class="al-entry-date" style="margin-top:0.6rem;">${dateStr}</div>
+    </div>`;
+  }).join('');
+}
+
+
 let cachedAvoidanceLogs = [];
 
 function selectAvoidanceType(el) {
@@ -1802,7 +2165,8 @@ async function saveAllData() {
       v: 2,
       thoughtRecords: cachedRecords,
       activityLogs: cachedActivityLogs,
-      avoidanceLogs: cachedAvoidanceLogs
+      avoidanceLogs: cachedAvoidanceLogs,
+      wins: cachedWins
     });
     await FirebaseREST.setDocument('thoughtRecords', uid, {
       records_json: blob,
@@ -1836,14 +2200,16 @@ loadRecordsFromCloud = async function() {
           cachedRecords = parsed.thoughtRecords || [];
           cachedActivityLogs = parsed.activityLogs || [];
           cachedAvoidanceLogs = parsed.avoidanceLogs || [];
+          cachedWins = parsed.wins || [];
         } else {
           // legacy: plain array of thought records
           cachedRecords = Array.isArray(parsed) ? parsed : [];
           cachedActivityLogs = [];
           cachedAvoidanceLogs = [];
+          cachedWins = [];
         }
       } else {
-        cachedRecords = []; cachedActivityLogs = []; cachedAvoidanceLogs = [];
+        cachedRecords = []; cachedActivityLogs = []; cachedAvoidanceLogs = []; cachedWins = [];
       }
     } else {
       cachedRecords = []; cachedActivityLogs = []; cachedAvoidanceLogs = [];
@@ -1853,6 +2219,7 @@ loadRecordsFromCloud = async function() {
     renderInsights();
     renderActivityHistory();
     renderAvoidanceHistory();
+    renderWins();
   } catch(e) {
     console.error('Load failed:', e);
     setSyncStatus('error');
@@ -1865,6 +2232,7 @@ handleSignOut = async function() {
   cachedRecords = [];
   cachedActivityLogs = [];
   cachedAvoidanceLogs = [];
+  cachedWins = [];
 };
 </script>
 
